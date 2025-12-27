@@ -28,7 +28,8 @@ function HomepageHeader() {
               </Link>
             </div>
           </div>
-          <div className={styles.heroImage}>
+
+          <div className={styles.heroImage} aria-hidden="false">
             <img
               src={useBaseUrl('/img/hero.png')}
               alt="Physical AI & Humanoid Robotics Hero"
@@ -81,6 +82,8 @@ function ModulesOverview() {
           <h2>Core Learning Modules</h2>
           <p className="hero__subtitle">Comprehensive curriculum covering essential robotics and AI concepts</p>
         </div>
+
+        {/* Use columns that collapse on mobile with the CSS above */}
         <div className="row">
           <div className="col col--3">
             <div className={clsx('card', styles.moduleCard)}>
@@ -88,7 +91,7 @@ function ModulesOverview() {
                 <h3>Module 1: ROS 2</h3>
               </div>
               <div className="card__body">
-                <p>Robot Operating System fundamentals, nodes, topics, services, and parameters.</p>
+                <p>Master the Robot Operating System 2 (ROS 2) framework, including nodes, topics, services, parameters, and communication patterns. Build robust robotic applications with this essential middleware.</p>
               </div>
               <div className="card__footer">
                 <Link className="button button--primary button--block" to="/docs/module-1-ros2">
@@ -97,13 +100,14 @@ function ModulesOverview() {
               </div>
             </div>
           </div>
+
           <div className="col col--3">
             <div className={clsx('card', styles.moduleCard)}>
               <div className="card__header">
                 <h3>Module 2: Simulation</h3>
               </div>
               <div className="card__body">
-                <p>Gazebo, Webots, and other simulation environments for robotics development.</p>
+                <p>Explore advanced simulation environments including Gazebo, Webots, and other platforms. Develop and test robotic applications in realistic virtual worlds before deploying to real hardware.</p>
               </div>
               <div className="card__footer">
                 <Link className="button button--primary button--block" to="/docs/module-2-simulation">
@@ -112,13 +116,14 @@ function ModulesOverview() {
               </div>
             </div>
           </div>
+
           <div className="col col--3">
             <div className={clsx('card', styles.moduleCard)}>
               <div className="card__header">
                 <h3>Module 3: NVIDIA Isaac</h3>
               </div>
               <div className="card__body">
-                <p>NVIDIA's robotics platform for advanced perception and control systems.</p>
+                <p>Discover NVIDIA Isaac, a comprehensive robotics platform for advanced perception, navigation, and control systems. Learn to leverage GPU acceleration and AI for next-generation robotics applications.</p>
               </div>
               <div className="card__footer">
                 <Link className="button button--primary button--block" to="/docs/module-3-isaac">
@@ -127,13 +132,14 @@ function ModulesOverview() {
               </div>
             </div>
           </div>
+
           <div className="col col--3">
             <div className={clsx('card', styles.moduleCard)}>
               <div className="card__header">
                 <h3>Module 4: VLA</h3>
               </div>
               <div className="card__body">
-                <p>Vision-Language-Action models for advanced robot decision making.</p>
+                <p>Master Vision-Language-Action (VLA) models that enable robots to understand and interact with the world. Learn how AI models process visual and linguistic inputs to make intelligent decisions and perform complex tasks.</p>
               </div>
               <div className="card__footer">
                 <Link className="button button--primary button--block" to="/docs/module-4-vla">
