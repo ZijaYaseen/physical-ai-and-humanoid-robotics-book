@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  title: Physical AI & Humanoid Robotics Demo API
+  version: 1.0.0
+  description: API for the web demo showcasing robotics pipeline
+paths:
+  /process-command:
+    post:
+      summary: Process a robot command
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                command:
+                  type: string
+                  description: The command to process (voice, text, etc.)
+                robot_type:
+                  type: string
+                  description: Type of robot to simulate
+      responses:
+        '200':
+          description: Command processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plan:
+                    type: string
+                    description: Generated action plan
+                  simulation_result:
+                    type: string
+                    description: Result of simulated robot action

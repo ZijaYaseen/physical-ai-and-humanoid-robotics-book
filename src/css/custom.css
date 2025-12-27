@@ -1,0 +1,385 @@
+/**
+ * Copyright (c) 2017-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/* Modern and attractive theme for Physical AI & Humanoid Robotics course */
+:root {
+  /* Primary colors - royal blue theme */
+  --ifm-color-primary: #4169E1; /* Royal blue */
+  --ifm-color-primary-dark: #00008B; /* Dark blue */
+  --ifm-color-primary-darker: #000080;
+  --ifm-color-primary-darkest: #000066;
+  --ifm-color-primary-light: #6495ED; /* Cornflower blue */
+  --ifm-color-primary-lighter: #87CEEB; /* Sky blue */
+  --ifm-color-primary-lightest: #B0E0E6; /* Powder blue */
+
+  /* Secondary colors */
+  --ifm-color-secondary: #2e7d32; /* Material green 700 */
+  --ifm-color-accent: #FFD700; /* Gold */
+  --ifm-color-warning: #f44336; /* Material red 500 */
+
+  /* Backgrounds */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f5f5f5;
+
+  /* Text */
+  --ifm-font-color-base: #202124;
+  --ifm-font-color-base-inverse: #ffffff;
+  --ifm-font-color-secondary: #5f6368;
+
+  /* Code */
+  --ifm-code-font-size: 95%;
+  --ifm-code-border-radius: 6px;
+  --ifm-code-background: #f6f8fa;
+  --docusaurus-highlighted-code-line-bg: rgba(46, 125, 50, 0.1);
+
+  /* Cards */
+  --ifm-card-background-color: #ffffff;
+  --ifm-card-border-radius: 12px;
+  --ifm-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.02), 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  /* Navbar */
+  --ifm-navbar-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* Animations */
+  --ifm-transition-fast: 0.2s;
+  --ifm-transition-slow: 0.3s;
+}
+
+/* Dark mode theme */
+[data-theme='dark'] {
+  /* Primary colors - dark theme */
+  --ifm-color-primary: #6495ED; /* Cornflower blue */
+  --ifm-color-primary-dark: #4169E1; /* Royal blue */
+  --ifm-color-primary-darker: #00008B; /* Dark blue */
+  --ifm-color-primary-darkest: #000080; /* Navy blue */
+  --ifm-color-primary-light: #87CEEB; /* Sky blue */
+  --ifm-color-primary-lighter: #B0E0E6; /* Powder blue */
+  --ifm-color-primary-lightest: #C6E2FF; /* Light royal blue */
+
+  /* Secondary colors */
+  --ifm-color-secondary: #4CAF50; /* Material green 500 */
+  --ifm-color-accent: #FFD700; /* Gold */
+  --ifm-color-warning: #EF5350; /* Material red 400 */
+
+  /* Backgrounds */
+  --ifm-background-color: #0d1117;
+  --ifm-background-surface-color: #161b22;
+
+  /* Text */
+  --ifm-font-color-base: #e6e6e6;
+  --ifm-font-color-base-inverse: #ffffff;
+  --ifm-font-color-secondary: #a0a0a0;
+
+  /* Code */
+  --ifm-code-background: #161b22;
+  --docusaurus-highlighted-code-line-bg: rgba(76, 175, 80, 0.2);
+
+  /* Cards */
+  --ifm-card-background-color: #161b22;
+  --ifm-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  /* Navbar */
+  --ifm-navbar-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Global styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  transition: background-color var(--ifm-transition-fast) ease;
+}
+
+/* Navbar enhancements */
+.navbar {
+  background: linear-gradient(135deg, var(--ifm-color-primary), #6495ED);
+  box-shadow: var(--ifm-navbar-shadow);
+  transition: all var(--ifm-transition-fast) ease;
+}
+
+/* Navbar links styling */
+.navbar__link {
+  color: white !important;
+}
+
+.navbar__link:hover {
+  color: #e0f2ff !important;
+  opacity: 0.9;
+}
+
+.navbar__item {
+  color: white !important;
+}
+
+.navbar__item:hover {
+  color: #e0f2ff !important;
+}
+
+.navbar__title {
+  font-weight: 700;
+  background: linear-gradient(45deg, #ffffff, #e0f2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar__brand {
+  transition: transform 0.3s ease;
+}
+
+.navbar__brand:hover {
+  transform: scale(1.05);
+}
+
+/* Hero section styling */
+.hero {
+  background: linear-gradient(135deg, var(--ifm-color-primary), #6495ED);
+  color: var(--ifm-font-color-base-inverse);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+/* Buttons */
+.button {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all var(--ifm-transition-fast) ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: var(--ifm-color-primary) !important;
+  border-color: var(--ifm-color-primary) !important;
+  color: white !important;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background-color: var(--ifm-color-primary-light) !important;
+  border-color: var(--ifm-color-primary-light) !important;
+  color: white !important;
+}
+
+/* Button outline variant */
+.button--outline {
+  background-color: transparent !important;
+  border: 2px solid white !important;
+  color: white !important;
+}
+
+.button--outline:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+/* Cards */
+.card {
+  border-radius: var(--ifm-card-border-radius);
+  box-shadow: var(--ifm-card-shadow);
+  transition: all var(--ifm-transition-fast) ease;
+  border: none;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Code blocks */
+.code-block {
+  border-radius: var(--ifm-code-border-radius);
+  font-size: var(--ifm-code-font-size);
+  background: var(--ifm-code-background);
+  margin: 1rem 0;
+}
+
+/* Admonitions */
+.admonition {
+  border-radius: 8px;
+  border-left-width: 4px;
+  margin: 1.5rem 0;
+}
+
+.admonition--note {
+  border-left-color: var(--ifm-color-primary);
+  background-color: rgba(26, 115, 232, 0.05);
+}
+
+.admonition--tip {
+  border-left-color: var(--ifm-color-secondary);
+  background-color: rgba(52, 168, 83, 0.05);
+}
+
+.admonition--caution {
+  border-left-color: var(--ifm-color-accent);
+  background-color: rgba(251, 188, 5, 0.05);
+}
+
+.admonition--danger {
+  border-left-color: var(--ifm-color-warning);
+  background-color: rgba(234, 67, 53, 0.05);
+}
+
+/* Sidebar */
+.menu {
+  font-size: 0.9rem;
+}
+
+.menu__list-item-collapsible:hover {
+  background-color: rgba(26, 115, 232, 0.1);
+  border-radius: 6px;
+}
+
+/* Footer */
+.footer {
+  background: var(--ifm-background-surface-color); /* Use theme-appropriate background */
+  color: var(--ifm-font-color-base);
+}
+
+/* Footer link styling */
+.footer a {
+  color: var(--ifm-font-color-base) !important; /* Use theme-appropriate color */
+}
+
+.footer a:hover {
+  color: var(--ifm-color-primary) !important; /* Use theme-appropriate primary color */
+  text-decoration: underline !important;
+}
+
+.footer__title {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--ifm-font-color-base);
+}
+
+/* Tables */
+.table-wrapper {
+  overflow: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin: 1rem 0;
+}
+
+/* Images */
+img {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Advanced robotics-specific styles */
+.robotics-feature-card {
+  background: linear-gradient(135deg, var(--ifm-background-surface-color), #f0f4f8);
+  border: 1px solid rgba(26, 115, 232, 0.1);
+  transition: all 0.3s ease;
+}
+
+.robotics-feature-card:hover {
+  border-color: rgba(26, 115, 232, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(26, 115, 232, 0.15);
+}
+
+.robotics-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--ifm-color-primary), var(--ifm-color-secondary));
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  font-size: 1.5rem;
+  color: white;
+  font-weight: bold;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ifm-background-surface-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ifm-color-primary-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-color-primary);
+}
+
+/* Announcement bar */
+.announcementBar {
+  background: linear-gradient(90deg, var(--ifm-color-primary), var(--ifm-color-secondary));
+  color: white;
+  font-weight: 500;
+}
+
+/* Search bar */
+.navbar__search-input {
+  border-radius: 20px;
+  padding: 8px 16px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.navbar__search-input::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+/* Breadcrumb */
+.theme-edit-this-page {
+  font-weight: 500;
+  color: var(--ifm-color-primary);
+}
+
+/* Responsive improvements */
+@media (max-width: 996px) {
+  .navbar__items {
+    gap: 0.5rem;
+  }
+
+  .navbar-sidebar__item {
+    padding: 1rem;
+  }
+}
