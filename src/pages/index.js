@@ -77,7 +77,7 @@ function FeatureSection() {
 function ModulesOverview() {
   return (
     <section className={styles.modules}>
-      <div className="container padding-vert--lg">
+      <div className="container">
         <div className="text--center padding-bottom--lg">
           <h2>Core Learning Modules</h2>
           <p className="hero__subtitle">Comprehensive curriculum covering essential robotics and AI concepts</p>

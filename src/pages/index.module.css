@@ -5,7 +5,7 @@
 
 /* Hero Banner Styles */
 .heroBanner {
-  padding: 1rem 0 0 0;
+  padding: 5rem 0 0 0;
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #4169E1, #6495ED);
@@ -152,7 +152,7 @@
 
 /* Features Section */
 .features {
-  padding: 2rem 0;
+  padding: 1rem 0;
   background: var(--ifm-background-surface-color);
 }
 
@@ -176,7 +176,7 @@
 
 /* Modules Section */
 .modules {
-  padding: 2rem 0;
+  padding: 1rem 0;
   background: var(--ifm-background-surface-color);
   border-top: gray 1px solid;
 }
@@ -232,22 +232,22 @@
 .moduleCard .card__header {
   background: linear-gradient(135deg, #4169E1, #6495ED);
   color: white;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .moduleCard .card__body {
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .moduleCard .card__footer {
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1rem;
 }
 
 /* CTA Section */
 .cta {
   background: linear-gradient(135deg, #4169E1, #6495ED);
   color: white;
-  padding: 3rem 0;
+  padding: 1.5rem 0;
   position: relative;
   overflow: hidden;
 }
@@ -337,18 +337,35 @@
   }
 }
 
-/* ---------- Mobile fixes: stack module cards, 2px side padding ---------- */
+/* ---------- Mobile fixes: stack module cards, smaller fonts, reduced padding ---------- */
 @media (max-width: 768px) {
-  /* reduce page side padding to 2px (applies to all major sections) */
+  /* reduce page side padding and overall page padding */
   .container,
   .heroBanner .container,
   .features .container,
   .modules .container,
   .cta .container {
-    padding-left: 2px !important;
-    padding-right: 2px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
     max-width: 100% !important;
     box-sizing: border-box;
+  }
+
+  /* reduce vertical padding for sections */
+  .features,
+  .modules,
+  .cta {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .heroBanner {
+    padding: 0.5rem 0 0 0 !important;
+    min-height: auto !important;
+  }
+
+  .heroBanner .container {
+    padding: 0 0.5rem !important;
   }
 
   /* ensure the global .row stacks vertically on mobile and preserves gap */
@@ -369,28 +386,64 @@
     box-sizing: border-box;
   }
 
+  /* smaller fonts for mobile */
+  .heroText h1 {
+    font-size: 2rem !important;
+  }
+
+  .heroText p {
+    font-size: 1rem !important;
+  }
+
+  .modules h2 {
+    font-size: 1.8rem !important;
+  }
+
+  .modules .hero__subtitle {
+    font-size: 1rem !important;
+  }
+
+  .moduleCard .card__header h3 {
+    font-size: 1.2rem !important;
+  }
+
+  .moduleCard .card__body p {
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .features h3 {
+    font-size: 1.2rem !important;
+  }
+
+  .features p {
+    font-size: 0.9rem !important;
+  }
+
+  .cta h2 {
+    font-size: 1.8rem !important;
+  }
+
+  .cta .hero__subtitle {
+    font-size: 1rem !important;
+  }
+
   /* visually separate cards and remove merging */
   .moduleCard {
-    padding: 12px !important;
+    padding: 8px !important;
     min-height: auto !important;
-    border-radius: 12px !important;
+    border-radius: 8px !important;
     box-shadow: 0 8px 20px rgba(0,0,0,0.06) !important;
     border: 1px solid rgba(65,105,225,0.08) !important;
     background-color: var(--ifm-background-surface-color) !important;
-  }
-
-  /* header/footer spacing */
-  .features,
-  .modules,
-  .cta {
-    padding-top: 8px !important;
-    padding-bottom: 12px !important;
   }
 
   /* button full width and cozy spacing */
   .buttons a.button {
     width: 100% !important;
     max-width: none !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.9rem !important;
   }
 }
 

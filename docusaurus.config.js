@@ -176,7 +176,7 @@ presets: [
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Physical AI & Humanoid Robotics Course. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Physical AI & Humanoid Robotics Course. Built by Zija Yaseen.`,
       },
       prism: {
         theme: lightCodeTheme,
