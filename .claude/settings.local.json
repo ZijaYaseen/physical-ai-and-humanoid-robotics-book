@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m uvicorn server:app --reload --port 8000)",
+      "Bash(python -c \"\nimport os\nfrom dotenv import load_dotenv\nload_dotenv\\(\\)\n\nprint\\(''Current CHAT_MODEL from .env:'', os.getenv\\(''CHAT_MODEL''\\)\\)\n\nfrom main import app\nfrom fastapi.testclient import TestClient\n\nclient = TestClient\\(app\\)\n\nprint\\(\\)\nprint\\(''Testing RAG API query endpoint \\(/api/query\\) with corrected model config...''\\)\ntry:\n    # Test with a simple query\n    test_data = {\n        ''query'': ''What is this book about?''\n    }\n    response = client.post\\(''/api/query'', json=test_data\\)\n    print\\(f''Status: {response.status_code}''\\)\n    if response.status_code == 200:\n        print\\(f''Response: {response.json\\(\\)}''\\)\n    else:\n        print\\(f''Error response: {response.text}''\\)\nexcept Exception as e:\n    print\\(f''Error: {e}''\\)\n    import traceback\n    traceback.print_exc\\(\\)\n\")"
+    ]
+  }
+}

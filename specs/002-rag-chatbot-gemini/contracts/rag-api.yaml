@@ -1,0 +1,220 @@
+openapi: 3.0.0
+info:
+  title: RAG Chatbot API
+  description: API for the RAG Chatbot integration with Docusaurus book
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://your-server.com
+    description: Production server
+
+paths:
+  /query:
+    post:
+      summary: Query the RAG system
+      description: Submit a query to the RAG system with optional selected text and mode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chatkit/session:
+    post:
+      summary: Create or get chat session
+      description: Create a new chat session or get an existing one
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    QueryRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          description: User's question
+          example: "What are the key concepts in ROS 2?"
+        selected_text:
+          type: string
+          description: Selected text from the page (optional)
+          example: "Robot Operating System 2 (ROS 2) is a flexible framework for writing robot applications..."
+        mode:
+          type: string
+          description: Query mode (strict|augment)
+          enum: [strict, augment]
+          default: augment
+        session_id:
+          type: string
+          description: Session identifier for context (optional)
+          example: "sess_12345"
+        top_k:
+          type: integer
+          description: Number of chunks to retrieve (optional)
+          default: 5
+          minimum: 1
+          maximum: 10
+      required:
+        - query
+
+    QueryResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: AI-generated answer
+          example: "ROS 2 is a flexible framework for writing robot applications..."
+        retrieved:
+          type: array
+          items:
+            $ref: '#/components/schemas/RetrievedChunk'
+        session_id:
+          type: string
+          description: Session identifier
+          example: "sess_12345"
+        mode:
+          type: string
+          description: Mode used for the query
+          enum: [strict, augment]
+      required:
+        - answer
+        - retrieved
+        - session_id
+        - mode
+
+    ChatSessionRequest:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: Existing session ID (creates new if not provided)
+          example: "sess_12345"
+        user_preferences:
+          type: object
+          description: User preferences for the session (optional)
+          properties:
+            default_mode:
+              type: string
+              enum: [strict, augment]
+              default: augment
+
+    ChatSessionResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+          description: Session identifier
+          example: "sess_12345"
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        created:
+          type: boolean
+          description: True if new session was created
+          example: true
+
+    RetrievedChunk:
+      type: object
+      properties:
+        source_path:
+          type: string
+          description: Path to the source document
+          example: "/docs/module-1-ros2"
+        chunk_id:
+          type: string
+          description: ID of the retrieved chunk
+          example: "chunk_67890"
+        text:
+          type: string
+          description: The actual text content of the chunk
+          example: "Robot Operating System 2 (ROS 2) is a flexible framework for writing robot applications..."
+        score:
+          type: number
+          description: Relevance score from vector search
+          example: 0.85
+          format: float
+        page_title:
+          type: string
+          description: Title of the page containing this chunk
+          example: "Module 1: ROS 2"
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique message identifier
+          example: "msg_11111"
+        role:
+          type: string
+          description: Message role
+          enum: [user, assistant]
+        content:
+          type: string
+          description: Message content
+          example: "What are the key concepts in ROS 2?"
+        timestamp:
+          type: string
+          description: Message creation time in ISO format
+          example: "2025-12-29T10:00:00Z"
+        retrieved_chunks:
+          type: array
+          items:
+            $ref: '#/components/schemas/RetrievedChunk'
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Invalid query format"
+        code:
+          type: string
+          description: Error code
+          example: "INVALID_QUERY"

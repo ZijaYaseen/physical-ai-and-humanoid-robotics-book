@@ -1,0 +1,8 @@
+fastapi==0.115.8
+uvicorn[standard]==0.36.1
+qdrant-client==1.12.2
+openai-agents==0.6.4
+python-dotenv==1.0.1
+pydantic==2.12.5
+pytest==8.3.3
+httpx==0.28.1
