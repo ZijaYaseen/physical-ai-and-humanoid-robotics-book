@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Any, Dict
@@ -22,6 +22,9 @@ from agents import (
     Runner,
     set_tracing_disabled,
 )
+
+# Import simple database components for development
+from db_simple import save_message, get_session_history, create_session, Message as MessageModel
 
 # Load environment variables
 load_dotenv()
@@ -207,6 +210,40 @@ class RAGService:
 
         return response.choices[0].message.content
 
+    def save_message_to_db(self, session_id: str, role: str, content: str, retrieved_chunks: Optional[List[RetrievedChunk]] = None):
+        """Save a message to the database."""
+        try:
+            # Convert retrieved_chunks to dict if provided
+            retrieved_dict = None
+            if retrieved_chunks:
+                retrieved_dict = [chunk.dict() for chunk in retrieved_chunks]
+
+            save_message(session_id, role, content, retrieved_dict)
+        except Exception as e:
+            logger.error(f"Error saving message to database: {e}")
+
+    def get_session_history(self, session_id: str) -> List[Message]:
+        """Get conversation history from the database."""
+        try:
+            messages_data = get_session_history(session_id)
+
+            messages = []
+            for msg_data in messages_data:
+                # Convert to the Message format expected by the frontend
+                message = Message(
+                    id=msg_data["id"],
+                    role=msg_data["role"],
+                    content=msg_data["content"],
+                    timestamp=msg_data["timestamp"],
+                    retrieved_chunks=[RetrievedChunk(**chunk) for chunk in msg_data["retrieved_chunks"]] if msg_data["retrieved_chunks"] else None
+                )
+                messages.append(message)
+
+            return messages
+        except Exception as e:
+            logger.error(f"Error retrieving session history: {e}")
+            return []
+
     async def query(self, query_request: QueryRequest) -> QueryResponse:
         """Process a query with optional selected text in strict or augment mode."""
         # Generate or use session ID
@@ -217,6 +254,9 @@ class RAGService:
             # In strict mode with selected text, only search within the selected text
             if not query_request.selected_text.strip():
                 # If selected text is empty, return the fallback message
+                # Save user query to database
+                self.save_message_to_db(session_id, "user", query_request.query)
+
                 return QueryResponse(
                     answer="I don't know based on the selected text.",
                     retrieved=[],
@@ -240,6 +280,10 @@ class RAGService:
 
             # Check if the answer is the fallback
             if "I don't know based on the selected text." in answer:
+                # Save user query and assistant response to database
+                self.save_message_to_db(session_id, "user", query_request.query, retrieved_chunks)
+                self.save_message_to_db(session_id, "assistant", answer, retrieved_chunks)
+
                 return QueryResponse(
                     answer="I don't know based on the selected text.",
                     retrieved=[],
@@ -261,6 +305,10 @@ class RAGService:
             )
             answer = await self.generate_response(query_request.query, retrieved_chunks)
 
+        # Save user query and assistant response to database
+        self.save_message_to_db(session_id, "user", query_request.query, retrieved_chunks)
+        self.save_message_to_db(session_id, "assistant", answer, retrieved_chunks)
+
         return QueryResponse(
             answer=answer,
             retrieved=retrieved_chunks,
@@ -269,13 +317,12 @@ class RAGService:
         )
 
     def create_or_get_session(self, session_request: ChatSessionRequest) -> ChatSessionResponse:
-        """Create or retrieve a chat session."""
+        """Create or retrieve a chat session with history."""
         session_id = session_request.session_id or str(uuid.uuid4())
         created = not session_request.session_id
 
-        # In a real implementation, we would retrieve actual session data
-        # For now, return an empty session
-        messages = []
+        # Get conversation history from database
+        messages = self.get_session_history(session_id)
 
         return ChatSessionResponse(
             session_id=session_id,

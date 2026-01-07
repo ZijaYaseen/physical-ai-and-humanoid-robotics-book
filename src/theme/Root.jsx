@@ -6,6 +6,7 @@ import SelectionAskButton from '../components/SelectionAskButton';
 export default function Root({children}) {
   const [showRAGWidget, setShowRAGWidget] = useState(false);
   const [selectedTextForQuery, setSelectedTextForQuery] = useState('');
+  const [currentSessionId, setCurrentSessionId] = useState(null);
 
   // Listen for the custom event from SelectionAskButton
   useEffect(() => {
@@ -86,7 +87,12 @@ export default function Root({children}) {
               overflow: 'hidden',
               backgroundColor: 'white',
             }}>
-              <BookRAGWidget selectedText={selectedTextForQuery} onQuerySent={() => setSelectedTextForQuery('')} />
+              <BookRAGWidget
+                selectedText={selectedTextForQuery}
+                onQuerySent={() => setSelectedTextForQuery('')}
+                sessionId={currentSessionId}
+                onSessionIdChange={(id) => setCurrentSessionId(id)}
+              />
               <button
                 onClick={() => setShowRAGWidget(false)}
                 style={{

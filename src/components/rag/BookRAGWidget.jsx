@@ -11,16 +11,58 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './BookRAGWidget.css'; // Component-specific styles
 
-const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null }) => {
+const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null, sessionId: externalSessionId = null, onSessionIdChange = null }) => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMode, setSelectedMode] = useState('augment'); // Default mode
-  const [sessionId, setSessionId] = useState(null);
+  const [internalSessionId, setInternalSessionId] = useState(null);
   const [selectedTextState, setSelectedTextState] = useState(propSelectedText);
   const messagesEndRef = useRef(null);
   const initializedRef = useRef(false);
   const querySentRef = useRef(false);
+
+  // Use external session ID if provided, otherwise use internal one
+  const effectiveSessionId = externalSessionId !== null ? externalSessionId : internalSessionId;
+
+  // Load session history when component mounts
+  useEffect(() => {
+    const loadSession = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/chatkit/session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            session_id: effectiveSessionId || undefined
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+
+          // Update internal session ID if new one was created (and no external session ID is provided)
+          if (data.session_id && !effectiveSessionId && !externalSessionId) {
+            setInternalSessionId(data.session_id);
+            if (onSessionIdChange) {
+              onSessionIdChange(data.session_id);
+            }
+          }
+
+          // Set messages if there's history, but only if we don't already have messages
+          if (data.messages && data.messages.length > 0 && messages.length === 0) {
+            setMessages(data.messages);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading session:', error);
+        // Continue with empty session if there's an error
+      }
+    };
+
+    loadSession();
+  }, [effectiveSessionId, externalSessionId, onSessionIdChange]); // Include effectiveSessionId in dependencies
 
   // Function to get selected text from the page
   const getSelectedText = () => {
@@ -66,7 +108,7 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
         }
       }, 300);
     }
-  }, [propSelectedText]);
+  }, [propSelectedText]); // Only run when propSelectedText changes
 
   // Expose a global function to open chat with text
   useEffect(() => {
@@ -98,7 +140,7 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
         query,
         selected_text: selectedTextState || undefined,
         mode: selectedMode,
-        session_id: sessionId || undefined,
+        session_id: effectiveSessionId || undefined,
         top_k: 5
       };
 
@@ -116,9 +158,12 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
 
       const data = await response.json();
 
-      // Update session ID if new session was created
-      if (data.session_id && !sessionId) {
-        setSessionId(data.session_id);
+      // Update session ID if new session was created (and no external session ID is provided)
+      if (data.session_id && !effectiveSessionId && !externalSessionId) {
+        setInternalSessionId(data.session_id);
+        if (onSessionIdChange) {
+          onSessionIdChange(data.session_id);
+        }
       }
 
       // Add user message
