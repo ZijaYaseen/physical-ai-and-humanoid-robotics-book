@@ -74,15 +74,6 @@ presets: [
         },
       };
     },
-    // Plugin to add the RAG widget globally via Root component
-    function() {
-      return {
-        name: 'global-rag-widget-root',
-        getClientModules() {
-          return [require.resolve('./src/components/Root')];
-        },
-      };
-    },
   ],
 
 

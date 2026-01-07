@@ -11,53 +11,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './BookRAGWidget.css'; // Component-specific styles
 
-interface RetrievedChunk {
-  source_path: string;
-  chunk_id: string;
-  text: string;
-  score: number;
-  page_title: string;
-}
-
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-  retrievedChunks?: RetrievedChunk[];
-}
-
-interface QueryRequest {
-  query: string;
-  selected_text?: string;
-  mode: 'strict' | 'augment';
-  session_id?: string;
-  top_k?: number;
-}
-
-interface QueryResponse {
-  answer: string;
-  retrieved: RetrievedChunk[];
-  session_id: string;
-  mode: string;
-}
-
-interface BookRAGWidgetProps {
-  selectedText?: string;
-}
-
-const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelectedText = '' }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null }) => {
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedMode, setSelectedMode] = useState<'strict' | 'augment'>('augment');
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [selectedTextState, setSelectedTextState] = useState<string>(propSelectedText);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [selectedMode, setSelectedMode] = useState('augment'); // Default mode
+  const [sessionId, setSessionId] = useState(null);
+  const [selectedTextState, setSelectedTextState] = useState(propSelectedText);
+  const messagesEndRef = useRef(null);
   const initializedRef = useRef(false);
+  const querySentRef = useRef(false);
 
   // Function to get selected text from the page
-  const getSelectedText = (): string => {
+  const getSelectedText = () => {
     const selection = window.getSelection();
     return selection ? selection.toString().trim() : '';
   };
@@ -81,29 +47,40 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
     };
   }, [propSelectedText]);
 
-  // Update selectedTextState when propSelectedText changes and populate input
+  // Update selectedTextState when propSelectedText changes and automatically submit query
   useEffect(() => {
-    if (propSelectedText && !initializedRef.current) {
+    if (propSelectedText && !querySentRef.current) {
       setSelectedTextState(propSelectedText);
       // Populate the input field with a query about the selected text
-      setInputValue(`Explain this: "${propSelectedText.substring(0, 200)}${propSelectedText.length > 200 ? '...' : ''}"`);
-      initializedRef.current = true;
+      const query = `Explain this: "${propSelectedText.substring(0, 200)}${propSelectedText.length > 200 ? '...' : ''}"`;
+      setInputValue(query);
+
+      // Automatically submit the query after a short delay to ensure UI updates
+      setTimeout(() => {
+        sendQuery(query);
+        // Clear the input field after sending the query
+        setInputValue('');
+        querySentRef.current = true;
+        if (onQuerySent && typeof onQuerySent === 'function') {
+          onQuerySent();
+        }
+      }, 300);
     }
   }, [propSelectedText]);
 
   // Expose a global function to open chat with text
   useEffect(() => {
-    const openChatWithText = (text: string) => {
+    const openChatWithText = (text) => {
       setSelectedTextState(text);
       setInputValue(`Explain this: "${text.substring(0, 200)}${text.length > 200 ? '...' : ''}"`);
     };
 
     // Make this function available globally
-    (window as any).openChatWithText = openChatWithText;
+    window.openChatWithText = openChatWithText;
 
     return () => {
       // Clean up the global function
-      delete (window as any).openChatWithText;
+      delete window.openChatWithText;
     };
   }, []);
 
@@ -113,11 +90,11 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
   }, [messages]);
 
   // Function to send query to backend
-  const sendQuery = async (query: string) => {
+  const sendQuery = async (query) => {
     setIsLoading(true);
 
     try {
-      const requestBody: QueryRequest = {
+      const requestBody = {
         query,
         selected_text: selectedTextState || undefined,
         mode: selectedMode,
@@ -137,7 +114,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data: QueryResponse = await response.json();
+      const data = await response.json();
 
       // Update session ID if new session was created
       if (data.session_id && !sessionId) {
@@ -145,7 +122,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
       }
 
       // Add user message
-      const userMessage: Message = {
+      const userMessage = {
         id: Date.now().toString() + '-user',
         role: 'user',
         content: query,
@@ -153,7 +130,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
       };
 
       // Add assistant message
-      const assistantMessage: Message = {
+      const assistantMessage = {
         id: Date.now().toString() + '-assistant',
         role: 'assistant',
         content: data.answer,
@@ -166,7 +143,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
       console.error('Error sending query:', error);
 
       // Add error message
-      const errorMessage: Message = {
+      const errorMessage = {
         id: Date.now().toString() + '-error',
         role: 'assistant',
         content: 'Sorry, there was an error processing your request. Please try again.',
@@ -180,11 +157,11 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue.trim() && !isLoading) {
       // Add user message immediately
-      const userMessage: Message = {
+      const userMessage = {
         id: Date.now().toString() + '-user-input',
         role: 'user',
         content: inputValue,
@@ -198,7 +175,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
   };
 
   // Handle mode change
-  const handleModeChange = (mode: 'strict' | 'augment') => {
+  const handleModeChange = (mode) => {
     setSelectedMode(mode);
   };
 

@@ -3,6 +3,7 @@ Main FastAPI application entry point for the RAG Chatbot system.
 """
 
 import logging
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from server import router as rag_router

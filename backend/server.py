@@ -64,7 +64,7 @@ def initialize_app():
         )
 
         model = OpenAIChatCompletionsModel(
-            model="gemini-2.0-flash",
+            model=os.getenv("CHAT_MODEL", "gemini-2.5-flash"),
             openai_client=external_client,
         )
 
@@ -305,6 +305,10 @@ def health_status():
 @router.post("/query", response_model=QueryResponse)
 async def query_endpoint(query_request: QueryRequest):
     """Process a query with optional selected text in strict or augment mode."""
+    if rag_service is None:
+        logger.error("RAG service not initialized")
+        raise HTTPException(status_code=503, detail="Service not initialized, please try again later.")
+
     try:
         response = await rag_service.query(query_request)
         return response
@@ -315,6 +319,10 @@ async def query_endpoint(query_request: QueryRequest):
 @router.post("/chatkit/session", response_model=ChatSessionResponse)
 async def session_endpoint(session_request: ChatSessionRequest):
     """Create or retrieve a chat session."""
+    if rag_service is None:
+        logger.error("RAG service not initialized")
+        raise HTTPException(status_code=503, detail="Service not initialized, please try again later.")
+
     try:
         response = rag_service.create_or_get_session(session_request)
         return response

@@ -101,3 +101,9 @@ pids
 venv/
 env/
 ENV/
+
+# Windows special files
+nul
+NUL
+nul.*
+NUL.*

@@ -39,7 +39,7 @@ try:
     print("SUCCESS: AsyncOpenAI client created successfully")
 
     model = OpenAIChatCompletionsModel(
-        model="gemini-2.0-flash",
+        model=os.getenv("CHAT_MODEL", "gemini-2.5-flash"),
         openai_client=external_client,
     )
     print("SUCCESS: OpenAIChatCompletionsModel created successfully")
