@@ -15,7 +15,7 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedMode, setSelectedMode] = useState('augment'); // Default mode
+  const [selectedMode, setSelectedMode] = useState('augment'); // Only mode now (strict mode removed)
   const [internalSessionId, setInternalSessionId] = useState(null);
   const [selectedTextState, setSelectedTextState] = useState(propSelectedText);
   const messagesEndRef = useRef(null);
@@ -91,7 +91,7 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
 
   // Update selectedTextState when propSelectedText changes and automatically submit query
   useEffect(() => {
-    if (propSelectedText && !querySentRef.current) {
+    if (propSelectedText && propSelectedText !== selectedTextState) {
       setSelectedTextState(propSelectedText);
       // Populate the input field with a query about the selected text
       const query = `Explain this: "${propSelectedText.substring(0, 200)}${propSelectedText.length > 200 ? '...' : ''}"`;
@@ -99,16 +99,15 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
 
       // Automatically submit the query after a short delay to ensure UI updates
       setTimeout(() => {
-        sendQuery(query);
+        sendQuery(query, true); // skipUserMessage = true for automatic queries
         // Clear the input field after sending the query
         setInputValue('');
-        querySentRef.current = true;
         if (onQuerySent && typeof onQuerySent === 'function') {
           onQuerySent();
         }
       }, 300);
     }
-  }, [propSelectedText]); // Only run when propSelectedText changes
+  }, [propSelectedText, selectedTextState]); // Include selectedTextState in dependencies to avoid duplicate triggers
 
   // Expose a global function to open chat with text
   useEffect(() => {
@@ -132,14 +131,14 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
   }, [messages]);
 
   // Function to send query to backend
-  const sendQuery = async (query) => {
+  const sendQuery = async (query, skipUserMessage = false) => {
     setIsLoading(true);
 
     try {
       const requestBody = {
         query,
         selected_text: selectedTextState || undefined,
-        mode: selectedMode,
+        mode: 'augment', // Always use augment mode (strict mode removed)
         session_id: effectiveSessionId || undefined,
         top_k: 5
       };
@@ -166,14 +165,6 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
         }
       }
 
-      // Add user message
-      const userMessage = {
-        id: Date.now().toString() + '-user',
-        role: 'user',
-        content: query,
-        timestamp: new Date(),
-      };
-
       // Add assistant message
       const assistantMessage = {
         id: Date.now().toString() + '-assistant',
@@ -183,7 +174,20 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
         retrievedChunks: data.retrieved,
       };
 
-      setMessages(prev => [...prev, userMessage, assistantMessage]);
+      if (skipUserMessage) {
+        // For automatic queries from useEffect, add only assistant message
+        setMessages(prev => [...prev, assistantMessage]);
+      } else {
+        // For user-initiated queries, add both user and assistant messages
+        const userMessage = {
+          id: Date.now().toString() + '-user',
+          role: 'user',
+          content: query,
+          timestamp: new Date(),
+        };
+
+        setMessages(prev => [...prev, userMessage, assistantMessage]);
+      }
     } catch (error) {
       console.error('Error sending query:', error);
 
@@ -205,24 +209,11 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue.trim() && !isLoading) {
-      // Add user message immediately
-      const userMessage = {
-        id: Date.now().toString() + '-user-input',
-        role: 'user',
-        content: inputValue,
-        timestamp: new Date(),
-      };
-
-      setMessages(prev => [...prev, userMessage]);
       sendQuery(inputValue);
       setInputValue('');
     }
   };
 
-  // Handle mode change
-  const handleModeChange = (mode) => {
-    setSelectedMode(mode);
-  };
 
   // Clear conversation
   const handleClear = () => {
@@ -237,22 +228,6 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
           <h3>Book Assistant</h3>
         </div>
         <div className="rag-controls">
-          <div className="mode-selector">
-            <button
-              className={`mode-btn ${selectedMode === 'strict' ? 'active' : ''}`}
-              onClick={() => handleModeChange('strict')}
-              title="Strict mode: Answer only from selected text"
-            >
-              Strict
-            </button>
-            <button
-              className={`mode-btn ${selectedMode === 'augment' ? 'active' : ''}`}
-              onClick={() => handleModeChange('augment')}
-              title="Augment mode: Use full document context"
-            >
-              Augment
-            </button>
-          </div>
           <button
             className="clear-btn"
             onClick={handleClear}

@@ -23,8 +23,24 @@ from agents import (
     set_tracing_disabled,
 )
 
-# Import simple database components for development
-from db_simple import save_message, get_session_history, create_session, Message as MessageModel
+# Import database components with fallback
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+# Try PostgreSQL first, fall back to in-memory if connection fails
+try:
+    NEON_DB_URL = os.getenv("NEON_DATABASE_URL")
+    if NEON_DB_URL and "your_neon_password_here" not in NEON_DB_URL:
+        from db import save_message, get_session_history, create_session, Message as MessageModel
+        print("Using PostgreSQL database for message persistence")
+    else:
+        from db_simple import save_message, get_session_history, create_session, Message as MessageModel
+        print("Using in-memory database (Neon DB not properly configured)")
+except Exception as e:
+    # If there's any error connecting to PostgreSQL, fall back to in-memory
+    from db_simple import save_message, get_session_history, create_session, Message as MessageModel
+    print(f"Using in-memory database (PostgreSQL connection failed: {str(e)})")
 
 # Load environment variables
 load_dotenv()
@@ -245,65 +261,16 @@ class RAGService:
             return []
 
     async def query(self, query_request: QueryRequest) -> QueryResponse:
-        """Process a query with optional selected text in strict or augment mode."""
+        """Process a query using full document context (strict mode removed)."""
         # Generate or use session ID
         session_id = query_request.session_id or str(uuid.uuid4())
 
-        # Determine search text based on mode
-        if query_request.mode == "strict" and query_request.selected_text:
-            # In strict mode with selected text, only search within the selected text
-            if not query_request.selected_text.strip():
-                # If selected text is empty, return the fallback message
-                # Save user query to database
-                self.save_message_to_db(session_id, "user", query_request.query)
-
-                return QueryResponse(
-                    answer="I don't know based on the selected text.",
-                    retrieved=[],
-                    session_id=session_id,
-                    mode=query_request.mode
-                )
-
-            # For strict mode, we'll create a temporary "chunk" from the selected text
-            retrieved_chunks = [
-                RetrievedChunk(
-                    source_path="selected_text",
-                    chunk_id="selected_text_chunk",
-                    text=query_request.selected_text,
-                    score=1.0,
-                    page_title="Selected Text"
-                )
-            ]
-
-            # Generate response based only on selected text
-            answer = await self.generate_response(query_request.query, retrieved_chunks)
-
-            # Check if the answer is the fallback
-            if "I don't know based on the selected text." in answer:
-                # Save user query and assistant response to database
-                self.save_message_to_db(session_id, "user", query_request.query, retrieved_chunks)
-                self.save_message_to_db(session_id, "assistant", answer, retrieved_chunks)
-
-                return QueryResponse(
-                    answer="I don't know based on the selected text.",
-                    retrieved=[],
-                    session_id=session_id,
-                    mode=query_request.mode
-                )
-        elif query_request.mode == "augment" or not query_request.selected_text:
-            # In augment mode or when no selected text, search the full corpus
-            retrieved_chunks = await self.retrieve_chunks(
-                query_request.query,
-                top_k=query_request.top_k
-            )
-            answer = await self.generate_response(query_request.query, retrieved_chunks)
-        else:
-            # Default to augment mode
-            retrieved_chunks = await self.retrieve_chunks(
-                query_request.query,
-                top_k=query_request.top_k
-            )
-            answer = await self.generate_response(query_request.query, retrieved_chunks)
+        # Always use augment mode (full document context), ignoring the mode parameter
+        retrieved_chunks = await self.retrieve_chunks(
+            query_request.query,
+            top_k=query_request.top_k
+        )
+        answer = await self.generate_response(query_request.query, retrieved_chunks)
 
         # Save user query and assistant response to database
         self.save_message_to_db(session_id, "user", query_request.query, retrieved_chunks)
@@ -313,7 +280,7 @@ class RAGService:
             answer=answer,
             retrieved=retrieved_chunks,
             session_id=session_id,
-            mode=query_request.mode
+            mode="augment"  # Always return augment mode
         )
 
     def create_or_get_session(self, session_request: ChatSessionRequest) -> ChatSessionResponse:
