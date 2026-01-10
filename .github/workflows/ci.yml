@@ -27,10 +27,9 @@ jobs:
 
     - name: Run notebook tests
       run: |
-        cd notebooks
         # Run a sample notebook to test execution
-        pip install nbconvert
-        jupyter nbconvert --to notebook --execute chapter-01-ros2.ipynb --ExecutePreprocessor.timeout=600 || echo "Notebook execution failed but continuing"
+        pip install nbconvert jupyter
+        jupyter nbconvert --to notebook --execute notebooks/chapter-01-ros2.ipynb --ExecutePreprocessor.timeout=600 || echo "Notebook execution failed but continuing"
 
     - name: Run Python tests
       run: |
@@ -39,6 +38,5 @@ jobs:
 
     - name: Build documentation
       run: |
-        cd docusaurus
         npm install
         npm run build
