@@ -1,4 +1,5 @@
 # Hugging Face Space Configuration
+type: gradio
 runtime:
   cpu: True
   memory: 16GiB
@@ -30,7 +31,7 @@ secrets:
     description: Better Auth secret key
     required: true
 
-variables:
+environment:
   OPENAI_BASE_URL: "https://generativelanguage.googleapis.com/v1beta/openai"
   EMBEDDING_MODEL: "text-embedding-004"
   CHAT_MODEL: "gemini-2.5-flash"

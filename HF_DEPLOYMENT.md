@@ -5,23 +5,26 @@
 1. **Hugging Face Account**: Sign up at [huggingface.co](https://huggingface.co)
 2. **Repository**: Create a new Space on Hugging Face
 3. **API Keys**: Have your Qdrant and Gemini API keys ready
+4. **Access Token**: Generate one from [your settings](https://huggingface.co/settings/tokens) with write permissions
 
 ## Deployment Steps
 
-### 1. Create a New Space
+### 1. Clone Your Space Repository
 
-1. Go to [huggingface.co/spaces](https://huggingface.co/spaces)
-2. Click "Create new Space"
-3. Choose these settings:
-   - **SDK**: Gradio (for the backend API)
-   - **Hardware**: CPU (recommended: 16GB RAM)
-   - **Visibility**: Public or Private (as per your preference)
+```bash
+# Use an access token as git password/credential
+# When prompted for a password, use an access token with write permissions
+git clone https://huggingface.co/spaces/zijayaseen/Physical_Ai_and_humanoid_robotics_book
+cd Physical_Ai_and_humanoid_robotics_book
+```
 
-### 2. Repository Setup
+### 2. Copy Required Files
 
-1. Clone your Space repository
-2. Copy all files from this repository to your Space
-3. Push the changes
+Copy these files to your cloned Space repository:
+- `app.py` - Gradio interface for the RAG system
+- `requirements-hf.txt` - Python dependencies
+- `backend/` - Contains your backend code
+- `docs/` - Contains documentation files
 
 ### 3. Environment Variables Setup
 
@@ -37,22 +40,21 @@ In your Hugging Face Space settings, configure these **Secrets**:
 - `NEON_DATABASE_URL`: Your full Neon database connection string
 - `BETTER_AUTH_SECRET`: Generate a secure secret key (32+ random characters)
 
-#### Optional Variables:
-- `OPENAI_BASE_URL`: Default is `https://generativelanguage.googleapis.com/v1beta/openai`
-- `EMBEDDING_MODEL`: Default is `text-embedding-004`
-- `CHAT_MODEL`: Default is `gemini-2.5-flash`
-- `TOP_K`: Default is `5`
-- `DEFAULT_MODE`: Default is `augment`
-
 ### 4. Required Files
 
 Make sure these files are in your repository:
-- `app.py` - Entry point for the application
+- `app.py` - Gradio interface for the RAG system
 - `requirements-hf.txt` - Python dependencies
 - `backend/` - Contains your backend code
 - `docs/` - Contains documentation files
 
-### 5. Build Process
+### 5. Push Changes
+
+```bash
+git add .
+git commit -m "Add RAG system for Physical AI & Humanoid Robotics"
+git push
+```
 
 Hugging Face will automatically:
 1. Install dependencies from `requirements-hf.txt`
@@ -76,7 +78,7 @@ Required Secrets:
 - NEON_DATABASE_URL: Your full Neon database connection string
 - BETTER_AUTH_SECRET: Secure secret key for authentication
 
-Default Variables (can be overridden):
+Environment Variables (set in space-config.yaml):
 - OPENAI_BASE_URL: https://generativelanguage.googleapis.com/v1beta/openai
 - EMBEDDING_MODEL: text-embedding-004
 - CHAT_MODEL: gemini-2.5-flash
@@ -88,11 +90,10 @@ Default Variables (can be overridden):
 
 ## API Endpoints
 
-Once deployed, your API will be available at:
-- Root: `https://your-username-space-name.hf.space/`
-- Health: `https://your-username-space-name.hf.space/health`
-- API Health: `https://your-username-space-name.hf.space/api/health`
-- Query: `https://your-username-space-name.hf.space/api/query`
+Once deployed, your interface will be available at:
+- **Gradio Interface**: `https://zijayaseen-physical-ai-and-humanoid-robotics-book.hf.space/`
+- **Health**: `https://zijayaseen-physical-ai-and-humanoid-robotics-book.hf.space/api/health`
+- **Query**: `https://zijayaseen-physical-ai-and-humanoid-robotics-book.hf.space/api/query`
 
 ## Frontend Integration
 
@@ -100,7 +101,7 @@ For your GitHub Pages frontend, update the API configuration to point to your Hu
 
 ```
 // In your frontend configuration
-const BACKEND_BASE_URL = 'https://your-username-space-name.hf.space';
+const BACKEND_BASE_URL = 'https://zijayaseen-physical-ai-and-humanoid-robotics-book.hf.space';
 ```
 
 ## Troubleshooting
@@ -117,16 +118,16 @@ const BACKEND_BASE_URL = 'https://your-username-space-name.hf.space';
    - Check that you have sufficient quota
    - Ensure your API key has necessary permissions
 
-3. **Database Connection Issues**:
-   - Verify your Neon database connection string
-   - Check that your database credentials are correct
-   - Ensure your database is running
+3. **Build Issues**:
+   - Check that all required files are present
+   - Verify requirements-hf.txt has correct dependencies
+   - Ensure your app.py properly exposes a Gradio interface
 
 ### Monitoring:
 
 - Check the Space logs in your Hugging Face dashboard
 - Verify environment variables are properly set
-- Test API endpoints manually
+- Test the Gradio interface functionality
 
 ## Scaling and Performance
 
