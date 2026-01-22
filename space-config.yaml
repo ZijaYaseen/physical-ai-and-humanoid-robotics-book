@@ -1,0 +1,44 @@
+# Hugging Face Space Configuration
+runtime:
+  cpu: True
+  memory: 16GiB
+  accelerator: null
+
+secrets:
+  - key: GEMINI_KEY
+    description: Your Google Gemini API key
+    required: true
+  - key: QDRANT_URL
+    description: Your Qdrant Cloud URL
+    required: true
+  - key: QDRANT_API_KEY
+    description: Your Qdrant API key
+    required: true
+  - key: NEON_DB_HOST
+    description: Your Neon database host
+    required: true
+  - key: NEON_DB_USER
+    description: Your Neon database username
+    required: true
+  - key: NEON_DB_PASSWORD
+    description: Your Neon database password
+    required: true
+  - key: NEON_DATABASE_URL
+    description: Your full Neon database connection string
+    required: true
+  - key: BETTER_AUTH_SECRET
+    description: Better Auth secret key
+    required: true
+
+variables:
+  OPENAI_BASE_URL: "https://generativelanguage.googleapis.com/v1beta/openai"
+  EMBEDDING_MODEL: "text-embedding-004"
+  CHAT_MODEL: "gemini-2.5-flash"
+  TOP_K: "5"
+  DEFAULT_MODE: "augment"
+  DOCS_DIR: "docs"
+  ENV_REUSABLE_INTEL: "false"
+  NEON_DB_PORT: "5432"
+  NEON_DB_NAME: "neondb"
+  SESSION_EXPIRES_IN_DAYS: "30"
+  PYTHON_VERSION: "3.13"

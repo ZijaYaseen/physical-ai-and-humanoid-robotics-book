@@ -13,6 +13,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './BookRAGWidget.css'; // Component-specific styles
 
+// Import API configuration
+const getBackendBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+
+    // For GitHub Pages, use Hugging Face Space
+    if (hostname.includes('github.io')) {
+      return 'https://your-username-space-name.hf.space';
+    }
+
+    // For local development
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:8000';
+    }
+  }
+
+  // Fallback to environment variable
+  return process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+};
+
 interface RetrievedChunk {
   source_path: string;
   chunk_id: string;
@@ -128,7 +148,8 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
         top_k: 5
       };
 
-      const response = await fetch('http://127.0.0.1:8000/api/query', {
+      const BACKEND_BASE_URL = getBackendBaseUrl();
+      const response = await fetch(`${BACKEND_BASE_URL}/api/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

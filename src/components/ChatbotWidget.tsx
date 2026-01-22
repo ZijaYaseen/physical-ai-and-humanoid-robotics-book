@@ -11,7 +11,24 @@ interface Message {
   timestamp: Date;
 }
 
-const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ apiUrl = 'http://127.0.0.1:8000/query' }) => {
+const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ apiUrl = undefined }) => {
+  // Dynamically determine the API URL based on environment
+  const getApiUrl = (): string => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      if (hostname.includes('github.io')) {
+        // For GitHub Pages, use your Hugging Face Space backend
+        return 'https://your-username-space-name.hf.space/api/query';
+      } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        // For local development
+        return 'http://localhost:8000/api/query';
+      }
+    }
+    // Fallback to environment variable or localhost
+    return process.env.REACT_APP_API_URL || 'http://localhost:8000/api/query';
+  };
+
+  const resolvedApiUrl = apiUrl || getApiUrl();
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -114,7 +131,7 @@ const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ apiUrl = 'http://127.0.0.
         top_k: 5
       };
 
-      const response = await fetch(apiUrl, {
+      const response = await fetch(resolvedApiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

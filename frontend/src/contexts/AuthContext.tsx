@@ -41,7 +41,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-      const response = await fetch('http://localhost:8000/api/auth/session', {
+      // Dynamically determine backend URL based on environment
+      const getBackendUrl = () => {
+        if (typeof window !== 'undefined') {
+          const hostname = window.location.hostname;
+          if (hostname.includes('github.io')) {
+            // For GitHub Pages, use Hugging Face Space backend
+            return 'https://your-username-space-name.hf.space';
+          } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            // For local development
+            return 'http://localhost:8000';
+          }
+        }
+        // Fallback to environment variable
+        return process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+      };
+
+      const BACKEND_URL = getBackendUrl();
+      const response = await fetch(`${BACKEND_URL}/api/auth/session`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -74,7 +91,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      const response = await fetch('http://localhost:8000/api/auth/sign-in', {
+      const response = await fetch(`${BACKEND_URL}/api/auth/sign-in`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +121,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      const response = await fetch('http://localhost:8000/api/auth/sign-up', {
+      const response = await fetch(`${BACKEND_URL}/api/auth/sign-up`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +151,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-      await fetch('http://localhost:8000/api/auth/sign-out', {
+      await fetch(`${BACKEND_URL}/api/auth/sign-out`, {
         method: 'POST',
         signal: controller.signal
       });
@@ -148,11 +165,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const signInWithGoogle = async () => {
-    window.location.href = 'http://localhost:8000/api/auth/oauth2/google';
+    window.location.href = `${BACKEND_URL}/api/auth/oauth2/google`;
   };
 
   const signInWithGitHub = async () => {
-    window.location.href = 'http://localhost:8000/api/auth/oauth2/github';
+    window.location.href = `${BACKEND_URL}/api/auth/oauth2/github`;
   };
 
   const forgotPassword = async (email: string) => {
@@ -160,7 +177,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      const response = await fetch('http://localhost:8000/api/auth/forgot-password', {
+      const response = await fetch(`${BACKEND_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
