@@ -6,6 +6,8 @@
  * - Toggle between strict/augment modes
  * - Displays responses with source citations
  * - Reuses Docusaurus theme styling
+ * - Fully responsive design
+ * - Enhanced UI with modern aesthetics
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -53,6 +55,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
   const [selectedMode, setSelectedMode] = useState<'strict' | 'augment'>('augment');
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [selectedTextState, setSelectedTextState] = useState<string>(propSelectedText);
+  const [isExpanded, setIsExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const initializedRef = useRef(false);
 
@@ -207,8 +210,18 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
     setMessages([]);
   };
 
+  // Handle input focus to expand widget on mobile
+  const handleInputFocus = () => {
+    setIsExpanded(true);
+  };
+
+  // Handle input blur to collapse widget on mobile
+  const handleInputBlur = () => {
+    setTimeout(() => setIsExpanded(false), 200); // Delay to allow clicking send button
+  };
+
   return (
-    <div className="book-rag-widget">
+    <div className={`book-rag-widget ${isExpanded ? 'expanded' : ''}`}>
       <div className="rag-header">
         <div className="rag-title-section">
           <div className="rag-icon">🤖</div>
@@ -220,6 +233,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
               className={`mode-btn ${selectedMode === 'strict' ? 'active' : ''}`}
               onClick={() => handleModeChange('strict')}
               title="Strict mode: Answer only from selected text"
+              aria-label="Strict mode"
             >
               Strict
             </button>
@@ -227,6 +241,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
               className={`mode-btn ${selectedMode === 'augment' ? 'active' : ''}`}
               onClick={() => handleModeChange('augment')}
               title="Augment mode: Use full document context"
+              aria-label="Augment mode"
             >
               Augment
             </button>
@@ -235,20 +250,12 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
             className="clear-btn"
             onClick={handleClear}
             title="Clear conversation"
+            aria-label="Clear conversation"
           >
             <span className="clear-icon">🗑️</span>
           </button>
         </div>
       </div>
-
-      {selectedTextState && (
-        <div className="selected-text-preview">
-          <div className="selected-text-content">
-            <span className="selected-text-label">Selected text:</span>
-            <p className="selected-text-value">"{selectedTextState.substring(0, 100)}{selectedTextState.length > 100 ? '...' : ''}"</p>
-          </div>
-        </div>
-      )}
 
       <div className="rag-messages">
         {messages.length === 0 ? (
@@ -262,6 +269,8 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
             <div
               key={message.id}
               className={`message ${message.role}`}
+              role="article"
+              aria-label={`${message.role} message`}
             >
               <div className="message-header">
                 <div className={`message-icon ${message.role}`}>
@@ -269,7 +278,9 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
                 </div>
                 <div className="message-info">
                   <span className="message-role">{message.role === 'user' ? 'You' : 'Assistant'}</span>
-                  <span className="message-time">{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span className="message-time" aria-label={`Sent at ${message.timestamp.toLocaleTimeString()}`}>
+                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
                 </div>
               </div>
               <div className="message-content">
@@ -292,12 +303,13 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="source-link"
+                                aria-label={`Source: ${chunk.page_title || chunk.source_path}`}
                               >
                                 <span className="source-title">{chunk.page_title || chunk.source_path}</span>
                               </a>
                               <div className="source-info">
-                                <span className="chunk-id">ID: {chunk.chunk_id}</span>
-                                <span className="source-score">Score: {Math.round(chunk.score * 100)}%</span>
+                                <span className="chunk-id" aria-label={`Chunk ID: ${chunk.chunk_id}`}>ID: {chunk.chunk_id}</span>
+                                <span className="source-score" aria-label={`Relevance score: ${Math.round(chunk.score * 100)}%`}>Score: {Math.round(chunk.score * 100)}%</span>
                               </div>
                             </div>
                           </li>
@@ -311,7 +323,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
           ))
         )}
         {isLoading && (
-          <div className="message assistant">
+          <div className="message assistant" role="article" aria-label="Assistant typing">
             <div className="message-header">
               <div className="message-icon assistant">🤖</div>
               <div className="message-info">
@@ -319,7 +331,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
               </div>
             </div>
             <div className="message-content">
-              <div className="typing-indicator">
+              <div className="typing-indicator" aria-label="Assistant is typing">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -335,14 +347,18 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
           placeholder={`Ask about the book... ${selectedTextState ? '(using selected text)' : ''}`}
           disabled={isLoading}
           className="rag-input"
+          aria-label="Type your message"
         />
         <button
           type="submit"
           disabled={isLoading || !inputValue.trim()}
           className="send-btn"
+          aria-label="Send message"
         >
           <span className="send-icon">➤</span>
         </button>

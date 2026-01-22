@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import BookRAGWidget from '../components/rag/BookRAGWidget';
 import SelectionAskButton from '../components/SelectionAskButton';
+import AuthWrapper from '../components/AuthWrapper';
 
 export default function Root({children}) {
   const [showRAGWidget, setShowRAGWidget] = useState(false);
@@ -28,7 +29,7 @@ export default function Root({children}) {
   }, []);
 
   return (
-    <>
+    <AuthWrapper>
       {children}
 
       {/* Floating RAG Widget Button - appears on all pages */}
@@ -80,12 +81,12 @@ export default function Root({children}) {
               position: 'fixed',
               bottom: '24px',
               right: '24px',
-              width: '480px',
+              width: 'min(480px, calc(100vw - 30px))', // Responsive width that scales down on small screens
+              height: 'min(80vh, 600px)', // Responsive height based on viewport height
+              maxHeight: 'calc(100vh - 100px)', // Maximum safe area to prevent header cut-off
+              minHeight: '500px', // Minimum height for usability
               zIndex: 999,
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)',
-              borderRadius: '12px',
               overflow: 'hidden',
-              backgroundColor: 'white',
             }}>
               <BookRAGWidget
                 selectedText={selectedTextForQuery}
@@ -110,9 +111,18 @@ export default function Root({children}) {
                   cursor: 'pointer',
                   fontSize: '16px',
                   fontWeight: 'bold',
-                  color: '#666',
+                  color: '#333',
                   zIndex: 1001,
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 1)';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.transform = 'scale(1)';
                 }}
                 title="Close"
               >
@@ -129,6 +139,93 @@ export default function Root({children}) {
           <SelectionAskButton />
         )}
       </BrowserOnly>
-    </>
+
+      {/* Add global styles for enhanced UI */}
+      <BrowserOnly fallback={<div />}>
+        {() => (
+          <style jsx>{`
+            @keyframes float {
+              0% {
+                transform: translateY(0px);
+              }
+              50% {
+                transform: translateY(-6px);
+              }
+              100% {
+                transform: translateY(0px);
+              }
+            }
+
+            /* Advanced responsive design for all screen sizes */
+            @media (max-width: 1024px) {
+              div[style*="position: fixed"][style*="bottom: 24px"] {
+                width: min(460px, calc(100vw - 25px)) !important;
+                height: min(65vh, 580px) !important;
+                bottom: 20px !important;
+                right: 20px !important;
+              }
+            }
+
+            @media (max-width: 768px) {
+              div[style*="position: fixed"][style*="bottom: 24px"] {
+                width: min(440px, calc(100vw - 20px)) !important;
+                height: min(60vh, 520px) !important;
+                maxHeight: calc(100vh - 110px) !important; /* Increased safe area for tablets */
+                bottom: 18px !important;
+                right: 18px !important;
+              }
+
+              button[style*="position: fixed"][style*="bottom: 24px"] {
+                bottom: 18px !important;
+                right: 18px !important;
+              }
+            }
+
+            @media (max-width: 640px) {
+              div[style*="position: fixed"][style*="bottom: 24px"] {
+                width: calc(100vw - 16px) !important;
+                height: min(55vh, 480px) !important;
+                maxHeight: calc(100vh - 120px) !important; /* Increased safe area for small tablets */
+                bottom: 16px !important;
+                right: 16px !important;
+              }
+            }
+
+            @media (max-width: 480px) {
+              div[style*="position: fixed"][style*="bottom: 24px"] {
+                width: calc(100vw - 14px) !important;
+                height: min(50vh, 420px) !important;
+                maxHeight: calc(100vh - 130px) !important; /* Increased safe area for phones */
+                bottom: 12px !important;
+                right: 12px !important;
+              }
+
+              button[style*="position: fixed"][style*="bottom: 24px"] {
+                bottom: 12px !important;
+                right: 12px !important;
+              }
+            }
+
+            @media (max-width: 400px) {
+              div[style*="position: fixed"][style*="bottom: 24px"] {
+                width: calc(100vw - 12px) !important;
+                height: min(48vh, 380px) !important;
+                maxHeight: calc(100vh - 120px) !important; /* Optimized safe area for very small screens */
+                bottom: 10px !important;
+                right: 10px !important;
+              }
+            }
+
+            /* Landscape orientation adjustments */
+            @media (max-height: 600px) and (orientation: landscape) {
+              div[style*="position: fixed"][style*="bottom: 24px"] {
+                height: min(50vh, 400px) !important;
+                maxHeight: calc(100vh - 90px) !important;
+              }
+            }
+          `}</style>
+        )}
+      </BrowserOnly>
+    </AuthWrapper>
   );
 }

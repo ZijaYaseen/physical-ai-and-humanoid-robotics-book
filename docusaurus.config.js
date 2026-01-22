@@ -110,7 +110,7 @@ presets: [
             label: 'Modules',
             position: 'left',
           },
-          {
+                    {
             href: 'https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book',
             label: 'GitHub',
             position: 'right',
@@ -191,7 +191,7 @@ presets: [
       announcementBar: {
         id: 'support_us',
         content:
-          '⭐ If you like this course, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/ZijaYaseen/physical-ai-and-Humanoid-Robotics">GitHub</a>! ⭐',
+          '⭐ If you like this course, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book">GitHub</a>! ⭐',
         backgroundColor: '#4169E1', // Royal blue theme color
         textColor: '#ffffff',
         isCloseable: true,

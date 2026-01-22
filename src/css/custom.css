@@ -43,6 +43,12 @@
 
   /* Navbar */
   --ifm-navbar-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --ifm-navbar-link-color: white;
+  --ifm-navbar-link-hover-color: #e0f2ff;
+  --ifm-navbar-title-color: white;
+  --ifm-navbar-background-color: linear-gradient(135deg, var(--ifm-color-primary), #6495ED);
+  --ifm-navbar-mobile-background-color: linear-gradient(135deg, var(--ifm-color-primary), #6495ED);
+  --ifm-navbar-mobile-text-color: white;
 
   /* Animations */
   --ifm-transition-fast: 0.2s;
@@ -84,6 +90,12 @@
 
   /* Navbar */
   --ifm-navbar-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --ifm-navbar-link-color: white;
+  --ifm-navbar-link-hover-color: #e0f2ff;
+  --ifm-navbar-title-color: white;
+  --ifm-navbar-background-color: linear-gradient(135deg, var(--ifm-color-primary), #6495ED);
+  --ifm-navbar-mobile-background-color: linear-gradient(135deg, var(--ifm-color-primary), #6495ED);
+  --ifm-navbar-mobile-text-color: white;
 }
 
 /* Global styles */
@@ -98,35 +110,46 @@ body {
 
 /* Navbar enhancements */
 .navbar {
-  background: linear-gradient(135deg, var(--ifm-color-primary), #6495ED);
+  background: var(--ifm-navbar-background-color);
   box-shadow: var(--ifm-navbar-shadow);
   transition: all var(--ifm-transition-fast) ease;
 }
 
+/* Light mode specific navbar adjustments */
+[data-theme='light'] .navbar {
+  background: linear-gradient(135deg, #4169E1, #6495ED); /* Keep blue gradient in light mode too */
+}
+
+/* Dark mode navbar */
+[data-theme='dark'] .navbar {
+  background: linear-gradient(135deg, #1a1a2e, #16213e); /* Darker blue gradient for dark mode */
+}
+
 /* Navbar links styling */
 .navbar__link {
-  color: white !important;
+  color: var(--ifm-navbar-link-color, white) !important;
 }
 
 .navbar__link:hover {
-  color: #e0f2ff !important;
+  color: var(--ifm-navbar-link-hover-color, #e0f2ff) !important;
   opacity: 0.9;
 }
 
 .navbar__item {
-  color: white !important;
+  color: var(--ifm-navbar-link-color, white) !important;
 }
 
 .navbar__item:hover {
-  color: #e0f2ff !important;
+  color: var(--ifm-navbar-link-hover-color, #e0f2ff) !important;
 }
 
 .navbar__title {
   font-weight: 700;
-  background: linear-gradient(45deg, #ffffff, #e0f2ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--ifm-navbar-title-color, white) !important;
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  background-clip: initial;
 }
 
 .navbar__brand {
@@ -375,11 +398,58 @@ img {
 
 /* Responsive improvements */
 @media (max-width: 996px) {
+  .navbar {
+    background: var(--ifm-navbar-mobile-background-color, linear-gradient(135deg, #4169E1, #6495ED)) !important;
+    padding: 0.75rem 1rem; /* Better padding for mobile */
+    min-height: 60px; /* Ensure adequate touch targets */
+  }
+
   .navbar__items {
     gap: 0.5rem;
+  }
+
+  .navbar__brand {
+    min-height: 40px; /* Ensure logo area is appropriately sized */
+  }
+
+  .navbar__logo {
+    height: 30px; /* Adjust logo size for mobile */
+    width: auto;
+  }
+
+  /* Make hamburger menu icon white in both themes on mobile */
+  .navbar__toggle {
+    color: white !important;
+  }
+
+  .navbar__toggle span {
+    background-color: white !important;
   }
 
   .navbar-sidebar__item {
     padding: 1rem;
   }
+
+  /* Ensure navbar items remain visible on mobile regardless of theme */
+  .navbar__link,
+  .navbar__title {
+    color: var(--ifm-navbar-mobile-text-color, white) !important;
+    padding: 0.5rem 0.75rem !important; /* Larger touch targets */
+    border-radius: 6px;
+  }
+
+  .navbar__link:hover,
+  .navbar__item:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Subtle hover effect */
+  }
+
+  /* Mobile sidebar improvements */
+  .navbar-sidebar {
+    background: var(--ifm-navbar-mobile-background-color, linear-gradient(135deg, #4169E1, #6495ED));
+  }
+
+  .navbar-sidebar .menu {
+    padding: 1rem 0;
+  }
 }
+
