@@ -5,14 +5,14 @@
 
 /* Hero Banner Styles */
 .heroBanner {
-  padding: 6rem 0 4rem 0; /* Increased padding */
+  padding: 4rem 0 0 0; /* Reduced padding */
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #4169E1, #6495ED);
   color: white;
-  min-height: 90vh;
+  min-height: 85vh; /* Reduced minimum height */
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* Align to bottom */
   background-size: cover;
   background-position: center;
 }
@@ -36,13 +36,14 @@
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: center;
+  align-items: center; /* Center items normally */
   justify-content: space-between;
   gap: 2rem;
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 2rem;
   box-sizing: border-box;
+  height: 100%;
 }
 
 /* Ensure container doesn't constrain the image */
@@ -60,16 +61,24 @@
   flex: 0 0 600px;
   max-width: 500px;
   animation: fadeInUp 0.8s ease-out;
+  align-self: center; /* Keep text centered while image goes to bottom */
 }
 
 .heroImage {
   flex: 1 1 auto;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end; /* Align image to bottom */
   position: relative;
   min-width: 0; /* allow shrinking on small screens */
   animation: fadeInUp 0.8s ease-out 0.2s both;
+  background: transparent !important; /* Ensure no background */
+  box-shadow: none !important; /* Remove any potential shadow */
+  border-radius: 0 !important; /* Remove any rounded corners */
+  margin-bottom: 0 !important; /* Remove any bottom margin */
+  padding-bottom: 0 !important; /* Remove any bottom padding */
+  flex-direction: column; /* Stack items vertically if needed */
+  margin-top: auto; /* Push to bottom */
 }
 
 .heroText h1 {
@@ -156,10 +165,14 @@
   max-width: 100%;
   height: auto;
   max-height: 1400px;
-  width: 100%;
+  width: 100%;  /* Standard size */
+  min-width: 550px;  /* Reduced minimum size */
   object-fit: contain;
   padding: 0;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 !important;  /* Remove rounded corners to eliminate shadow effect */
+  box-shadow: none !important;  /* Ensure no shadow */
+  outline: none !important;     /* Ensure no outline */
 }
 
 .cta {
@@ -358,6 +371,11 @@
 
   .heroText {
     max-width: 600px;
+  }
+
+  /* Reduce top padding for desktop */
+  .heroBanner {
+    padding-top: 2rem; /* Reduced from default */
   }
 }
 
