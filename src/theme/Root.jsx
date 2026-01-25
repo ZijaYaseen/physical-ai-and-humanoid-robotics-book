@@ -90,7 +90,11 @@ export default function Root({children}) {
             }}>
               <BookRAGWidget
                 selectedText={selectedTextForQuery}
-                onQuerySent={() => setSelectedTextForQuery('')}
+                onQuerySent={() => {
+                  setSelectedTextForQuery('');
+                  // Also hide the widget after sending if user prefers
+                  // setShowRAGWidget(false); // Uncomment if you want to close after sending
+                }}
                 sessionId={currentSessionId}
                 onSessionIdChange={(id) => setCurrentSessionId(id)}
               />

@@ -37,7 +37,7 @@
   z-index: 1;
   display: flex;
   align-items: center; /* Center items normally */
-  justify-content: space-between;
+  justify-content: space-between; /* Restore original spacing */
   gap: 2rem;
   max-width: 1600px;
   margin: 0 auto;
@@ -79,6 +79,54 @@
   padding-bottom: 0 !important; /* Remove any bottom padding */
   flex-direction: column; /* Stack items vertically if needed */
   margin-top: auto; /* Push to bottom */
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 996px) {
+  .heroContent {
+    flex-direction: column;
+    text-align: center;
+    gap: 3rem; /* Increased gap */
+    padding: 0 1.5rem;
+    width: 100%;
+  }
+
+  .heroText {
+    flex: 0 0 auto;
+    max-width: 100%;
+    animation: fadeInUp 0.8s ease-out;
+    text-align: center; /* Ensure text stays centered on mobile */
+    width: 100%;
+    padding: 0 1rem; /* Add padding to prevent text from touching edges */
+  }
+
+  .heroImage {
+    width: 100%;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    padding: 0; /* Add padding to prevent image from touching edges */
+  }
+
+  .heroImageElement {
+    max-width: 95vw;
+    max-height: 500px;
+    width: auto;
+    height: auto;
+  }
+
+  .buttons {
+    justify-content: center;
+    flex-direction: column;
+    gap: 1.5rem; /* Increased gap */
+    align-items: center;
+    width: 100%;
+    padding: 0 1rem; /* Add padding to prevent buttons from touching edges */
+  }
+
+  .buttons a {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+  }
 }
 
 .heroText h1 {
@@ -166,13 +214,31 @@
   height: auto;
   max-height: 1400px;
   width: 100%;  /* Standard size */
-  min-width: 550px;  /* Reduced minimum size */
+  min-width: 550px; 
   object-fit: contain;
   padding: 0;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 0 !important;  /* Remove rounded corners to eliminate shadow effect */
   box-shadow: none !important;  /* Ensure no shadow */
   outline: none !important;     /* Ensure no outline */
+}
+
+/* Mobile-specific adjustments for hero image */
+@media (max-width: 768px) {
+  .heroImageElement {
+    max-width: 95vw; /* Make image smaller on mobile */
+    max-height: 400px; /* Limit height on mobile */
+    width: auto; /* Allow width to adjust automatically */
+    height: auto; /* Allow height to adjust automatically */
+    min-width: unset; /* Ensure no minimum width constraint */
+  }
+}
+
+@media (max-width: 480px) {
+  .heroImageElement {
+    max-width: 98vw; /* Even smaller on very small screens */
+    max-height: 300px; /* Further limit height */
+  }
 }
 
 .cta {
@@ -493,10 +559,12 @@
 
   .heroText h1 {
     font-size: 2.2rem !important;
+    word-break: break-word; /* Prevent long words from breaking layout */
   }
 
   .heroText p {
     font-size: 1.1rem !important;
+    word-break: break-word; /* Prevent long words from breaking layout */
   }
 
   .modules h2 {
@@ -606,6 +674,7 @@
     padding: 0.875rem 1.5rem !important; /* Increased padding */
     font-size: 1rem !important; /* Larger font */
     min-width: 150px;
+    word-break: break-word; /* Prevent long button text from breaking layout */
   }
 
   .modulesHeader h2 {

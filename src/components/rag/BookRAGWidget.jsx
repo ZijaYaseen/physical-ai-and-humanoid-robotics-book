@@ -90,31 +90,26 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
     };
   }, [propSelectedText]);
 
-  // Update selectedTextState when propSelectedText changes and automatically submit query
+  // Update selectedTextState when propSelectedText changes and populate input field
   useEffect(() => {
-    if (propSelectedText && propSelectedText !== selectedTextState) {
+    if (propSelectedText) {
       setSelectedTextState(propSelectedText);
       // Populate the input field with a query about the selected text
       const query = `Explain this: "${propSelectedText.substring(0, 200)}${propSelectedText.length > 200 ? '...' : ''}"`;
       setInputValue(query);
 
-      // Automatically submit the query after a short delay to ensure UI updates
-      setTimeout(() => {
-        sendQuery(query, true); // skipUserMessage = true for automatic queries
-        // Clear the input field after sending the query
-        setInputValue('');
-        if (onQuerySent && typeof onQuerySent === 'function') {
-          onQuerySent();
-        }
-      }, 300);
+      // Don't automatically submit, just populate the input field
+      // The user can manually submit if they want
     }
-  }, [propSelectedText, selectedTextState]); // Include selectedTextState in dependencies to avoid duplicate triggers
+  }, [propSelectedText]); // Only depend on propSelectedText to ensure it runs when prop changes
 
   // Expose a global function to open chat with text
   useEffect(() => {
     const openChatWithText = (text) => {
       setSelectedTextState(text);
-      setInputValue(`Explain this: "${text.substring(0, 200)}${text.length > 200 ? '...' : ''}"`);
+      const query = `Explain this: "${text.substring(0, 200)}${text.length > 200 ? '...' : ''}"`;
+      setInputValue(query);
+      // Just populate the input field, don't auto-submit
     };
 
     // Make this function available globally
