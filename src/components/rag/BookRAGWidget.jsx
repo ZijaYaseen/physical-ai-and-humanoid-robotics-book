@@ -29,7 +29,8 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
   useEffect(() => {
     const loadSession = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/chatkit/session', {
+        const CHATBOT_BACKEND_API = process.env.CHATBOT_BACKEND_API || 'http://127.0.0.1:8000';
+        const response = await fetch(`${CHATBOT_BACKEND_API}/chatkit/session`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -143,7 +144,7 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
         top_k: 5
       };
 
-      const response = await fetch('http://127.0.0.1:8000/api/query', {
+      const response = await fetch(`${CHATBOT_BACKEND_API}/api/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -237,15 +238,6 @@ const BookRAGWidget = ({ selectedText: propSelectedText = '', onQuerySent = null
           </button>
         </div>
       </div>
-
-      {selectedTextState && (
-        <div className="selected-text-preview">
-          <div className="selected-text-content">
-            <span className="selected-text-label">Selected text:</span>
-            <p className="selected-text-value">"{selectedTextState.substring(0, 100)}{selectedTextState.length > 100 ? '...' : ''}"</p>
-          </div>
-        </div>
-      )}
 
       <div className="rag-messages">
         {messages.length === 0 ? (
