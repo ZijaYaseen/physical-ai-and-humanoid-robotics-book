@@ -1,0 +1,27 @@
+{
+  "id": "module-4-vla",
+  "title": "Module 4: Vision-Language-Action (VLA) - Multimodal AI for Robotics",
+  "description": "Overview",
+  "source": "@site/docs/module-4-vla.md",
+  "sourceDirName": ".",
+  "slug": "/module-4-vla",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-4-vla",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/module-4-vla.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "sidebar_position": 5
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Part 1: Isaac ROS",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-3-isaac-part1-isaac-ros"
+  },
+  "next": {
+    "title": "Part 1: Multimodal Integration",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-4-vla-part1-multimodal-integration"
+  }
+}

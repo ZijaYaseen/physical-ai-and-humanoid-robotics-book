@@ -1,0 +1,98 @@
+{
+  "/physical-ai-and-humanoid-robotics-book/docs-ada": {
+    "__comp": "5e95c892",
+    "__context": {
+      "plugin": "aba21aa0"
+    }
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs-94f": {
+    "__comp": "a7bd4aaa",
+    "__props": "010d45e7"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs-b0b": {
+    "__comp": "a94703ab"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/demo-51e": {
+    "__comp": "17896441",
+    "content": "74b23640"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/hardware-cloud-options-06f": {
+    "__comp": "17896441",
+    "content": "d4581d94"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/intro-00e": {
+    "__comp": "17896441",
+    "content": "0e384e19"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-1-ros2-5c5": {
+    "__comp": "17896441",
+    "content": "1fbad63b"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-1-ros2-part1-communication-patterns-893": {
+    "__comp": "17896441",
+    "content": "05c4b891"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-1-ros2-part1-core-architecture-1d0": {
+    "__comp": "17896441",
+    "content": "8fc220d5"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-1-ros2-part1-nodes-topics-services-ee4": {
+    "__comp": "17896441",
+    "content": "d67cd6f0"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation-d61": {
+    "__comp": "17896441",
+    "content": "fef271ed"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation-part1-gazebo-ignition-c46": {
+    "__comp": "17896441",
+    "content": "87cf9d74"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation-part2-physics-modeling-029": {
+    "__comp": "17896441",
+    "content": "f7d77f4f"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-3-isaac-678": {
+    "__comp": "17896441",
+    "content": "dff92869"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-3-isaac-part1-isaac-ros-315": {
+    "__comp": "17896441",
+    "content": "ec4535cb"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-4-vla-496": {
+    "__comp": "17896441",
+    "content": "1d1d0347"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/module-4-vla-part1-multimodal-integration-522": {
+    "__comp": "17896441",
+    "content": "d88703ad"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/notebook-guide-2d8": {
+    "__comp": "17896441",
+    "content": "8e75e646"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/overview-e55": {
+    "__comp": "17896441",
+    "content": "1db64337"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/rag-923": {
+    "__comp": "17896441",
+    "content": "5d3c219b"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/setup-guide-c1e": {
+    "__comp": "17896441",
+    "content": "a1ad2b8b"
+  },
+  "/physical-ai-and-humanoid-robotics-book/docs/weekly-schedule-c23": {
+    "__comp": "17896441",
+    "content": "c0e20c00"
+  },
+  "/physical-ai-and-humanoid-robotics-book/-bda": {
+    "__comp": "c4f5d8e4",
+    "__context": {
+      "plugin": "a7456010"
+    },
+    "config": "5e9f5e1a"
+  }
+}

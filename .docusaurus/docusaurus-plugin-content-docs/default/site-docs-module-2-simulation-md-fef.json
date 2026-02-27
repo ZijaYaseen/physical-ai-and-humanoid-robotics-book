@@ -1,0 +1,27 @@
+{
+  "id": "module-2-simulation",
+  "title": "Module 2: Simulation Environments - Virtual Worlds for Robotics",
+  "description": "Overview",
+  "source": "@site/docs/module-2-simulation.md",
+  "sourceDirName": ".",
+  "slug": "/module-2-simulation",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/module-2-simulation.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Part 1: Nodes, Topics, and Services",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-1-ros2-part1-nodes-topics-services"
+  },
+  "next": {
+    "title": "Part 1: Gazebo and Ignition",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation-part1-gazebo-ignition"
+  }
+}

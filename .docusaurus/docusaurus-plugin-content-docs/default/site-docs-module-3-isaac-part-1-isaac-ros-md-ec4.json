@@ -1,0 +1,27 @@
+{
+  "id": "module-3-isaac-part1-isaac-ros",
+  "title": "Module 3 - Part 1: Isaac ROS",
+  "description": "Overview",
+  "source": "@site/docs/module-3-isaac-part1-isaac-ros.md",
+  "sourceDirName": ".",
+  "slug": "/module-3-isaac-part1-isaac-ros",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-3-isaac-part1-isaac-ros",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/module-3-isaac-part1-isaac-ros.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "sidebar_label": "Part 1: Isaac ROS",
+    "sidebar_class_name": "part-1"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Module 3: NVIDIA Isaac - AI-Powered Robotics Platform",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-3-isaac"
+  },
+  "next": {
+    "title": "Module 4: Vision-Language-Action (VLA) - Multimodal AI for Robotics",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-4-vla"
+  }
+}

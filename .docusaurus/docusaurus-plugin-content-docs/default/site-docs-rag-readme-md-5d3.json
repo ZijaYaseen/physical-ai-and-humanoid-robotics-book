@@ -1,0 +1,15 @@
+{
+  "id": "rag/README",
+  "title": "RAG Chatbot Integration",
+  "description": "This document describes the RAG (Retrieval-Augmented Generation) chatbot integration for the Physical AI & Humanoid Robotics course book.",
+  "source": "@site/docs/rag/README.md",
+  "sourceDirName": "rag",
+  "slug": "/rag/",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/rag/",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/rag/README.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {}
+}

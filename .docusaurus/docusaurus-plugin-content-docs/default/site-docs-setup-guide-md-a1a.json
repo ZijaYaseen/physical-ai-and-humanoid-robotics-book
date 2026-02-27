@@ -1,0 +1,27 @@
+{
+  "id": "setup-guide",
+  "title": "Setup Guide",
+  "description": "Overview",
+  "source": "@site/docs/setup-guide.md",
+  "sourceDirName": ".",
+  "slug": "/setup-guide",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/setup-guide",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/setup-guide.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "sidebar_position": 9
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "13-Week Course Schedule",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/weekly-schedule"
+  },
+  "next": {
+    "title": "Jupyter Notebook Guide",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/notebook-guide"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "module-2-simulation-part2-physics-modeling",
+  "title": "Module 2 - Part 2: Physics Modeling",
+  "description": "Overview",
+  "source": "@site/docs/module-2-simulation-part2-physics-modeling.md",
+  "sourceDirName": ".",
+  "slug": "/module-2-simulation-part2-physics-modeling",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation-part2-physics-modeling",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/module-2-simulation-part2-physics-modeling.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "sidebar_label": "Part 2: Physics Modeling",
+    "sidebar_class_name": "part-2"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Part 1: Gazebo and Ignition",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation-part1-gazebo-ignition"
+  },
+  "next": {
+    "title": "Module 3: NVIDIA Isaac - AI-Powered Robotics Platform",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-3-isaac"
+  }
+}

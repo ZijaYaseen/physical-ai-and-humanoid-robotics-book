@@ -1,0 +1,27 @@
+{
+  "id": "module-2-simulation-part1-gazebo-ignition",
+  "title": "Module 2 - Part 1: Gazebo and Ignition",
+  "description": "Overview",
+  "source": "@site/docs/module-2-simulation-part1-gazebo-ignition.md",
+  "sourceDirName": ".",
+  "slug": "/module-2-simulation-part1-gazebo-ignition",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation-part1-gazebo-ignition",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/module-2-simulation-part1-gazebo-ignition.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "sidebar_label": "Part 1: Gazebo and Ignition",
+    "sidebar_class_name": "part-1"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Module 2: Simulation Environments - Virtual Worlds for Robotics",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation"
+  },
+  "next": {
+    "title": "Part 2: Physics Modeling",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-2-simulation-part2-physics-modeling"
+  }
+}

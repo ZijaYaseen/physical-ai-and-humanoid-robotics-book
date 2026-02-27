@@ -1,0 +1,27 @@
+{
+  "id": "weekly-schedule",
+  "title": "13-Week Course Schedule",
+  "description": "Overview",
+  "source": "@site/docs/weekly-schedule.md",
+  "sourceDirName": ".",
+  "slug": "/weekly-schedule",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/weekly-schedule",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/weekly-schedule.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "sidebar_position": 6
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Hardware & Cloud Deployment Options",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/hardware-cloud-options"
+  },
+  "next": {
+    "title": "Setup Guide",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/setup-guide"
+  }
+}

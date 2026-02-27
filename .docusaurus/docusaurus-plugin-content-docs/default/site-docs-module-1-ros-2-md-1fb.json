@@ -1,0 +1,27 @@
+{
+  "id": "module-1-ros2",
+  "title": "Module 1: ROS 2 - Robot Operating System Fundamentals",
+  "description": "Overview",
+  "source": "@site/docs/module-1-ros2.md",
+  "sourceDirName": ".",
+  "slug": "/module-1-ros2",
+  "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-1-ros2",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/ZijaYaseen/physical-ai-and-humanoid-robotics-book/tree/main/docs/module-1-ros2.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Introduction",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/intro"
+  },
+  "next": {
+    "title": "Part 1: Core Architecture",
+    "permalink": "/physical-ai-and-humanoid-robotics-book/docs/module-1-ros2-part1-core-architecture"
+  }
+}
