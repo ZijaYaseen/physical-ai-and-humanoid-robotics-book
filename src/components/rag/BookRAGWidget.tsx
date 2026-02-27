@@ -13,25 +13,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './BookRAGWidget.css'; // Component-specific styles
 
-// Import API configuration
-const getBackendBaseUrl = () => {
-  if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-
-    // For GitHub Pages, use Hugging Face Space
-    if (hostname.includes('github.io')) {
-      return 'https://your-username-space-name.hf.space';
-    }
-
-    // For local development
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:8000';
-    }
-  }
-
-  // Fallback to environment variable
-  return process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
-};
+// Simple backend URL - direct connection to Python backend
+const BACKEND_URL = 'http://localhost:8000';
 
 interface RetrievedChunk {
   source_path: string;
@@ -148,8 +131,7 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
         top_k: 5
       };
 
-      const BACKEND_BASE_URL = getBackendBaseUrl();
-      const response = await fetch(`${BACKEND_BASE_URL}/api/query`, {
+      const response = await fetch(`${BACKEND_URL}/api/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,10 +140,13 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Backend error response:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
       }
 
       const data: QueryResponse = await response.json();
+      console.log('Received response from backend:', data);
 
       // Update session ID if new session was created
       if (data.session_id && !sessionId) {
@@ -188,12 +173,15 @@ const BookRAGWidget: React.FC<BookRAGWidgetProps> = ({ selectedText: propSelecte
       setMessages(prev => [...prev, userMessage, assistantMessage]);
     } catch (error) {
       console.error('Error sending query:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      console.error('Error name:', error instanceof Error ? error.name : 'Unknown');
+      console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
 
       // Add error message
       const errorMessage: Message = {
         id: Date.now().toString() + '-error',
         role: 'assistant',
-        content: 'Sorry, there was an error processing your request. Please try again.',
+        content: `Sorry, there was an error processing your request. Please try again. Details: ${error instanceof Error ? error.message : 'Unknown error'}`,
         timestamp: new Date(),
       };
 

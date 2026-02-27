@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import BookRAGWidget from '../components/rag/BookRAGWidget';
 import SelectionAskButton from '../components/SelectionAskButton';
-import AuthWrapper from '../components/AuthWrapper';
 
 export default function Root({children}) {
   const [showRAGWidget, setShowRAGWidget] = useState(false);
   const [selectedTextForQuery, setSelectedTextForQuery] = useState('');
-  const [currentSessionId, setCurrentSessionId] = useState(null);
 
   // Listen for the custom event from SelectionAskButton
   useEffect(() => {
@@ -29,7 +27,7 @@ export default function Root({children}) {
   }, []);
 
   return (
-    <AuthWrapper>
+    <>
       {children}
 
       {/* Floating RAG Widget Button - appears on all pages */}
@@ -81,23 +79,14 @@ export default function Root({children}) {
               position: 'fixed',
               bottom: '24px',
               right: '24px',
-              width: 'min(480px, calc(100vw - 30px))', // Responsive width that scales down on small screens
-              height: 'min(80vh, 600px)', // Responsive height based on viewport height
-              maxHeight: 'calc(100vh - 100px)', // Maximum safe area to prevent header cut-off
-              minHeight: '500px', // Minimum height for usability
+              width: 'min(480px, calc(100vw - 30px))',
+              height: 'min(80vh, 600px)',
+              maxHeight: 'calc(100vh - 100px)',
+              minHeight: '500px',
               zIndex: 999,
               overflow: 'hidden',
             }}>
-              <BookRAGWidget
-                selectedText={selectedTextForQuery}
-                onQuerySent={() => {
-                  setSelectedTextForQuery('');
-                  // Also hide the widget after sending if user prefers
-                  // setShowRAGWidget(false); // Uncomment if you want to close after sending
-                }}
-                sessionId={currentSessionId}
-                onSessionIdChange={(id) => setCurrentSessionId(id)}
-              />
+              <BookRAGWidget selectedText={selectedTextForQuery} />
               <button
                 onClick={() => setShowRAGWidget(false)}
                 style={{
@@ -230,6 +219,6 @@ export default function Root({children}) {
           `}</style>
         )}
       </BrowserOnly>
-    </AuthWrapper>
+    </>
   );
 }

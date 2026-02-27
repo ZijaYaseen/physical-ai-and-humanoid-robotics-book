@@ -1,18 +1,13 @@
-from fastapi import APIRouter, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional, List, Any, Dict
+from typing import Optional, List, Dict, Any
 from dotenv import load_dotenv
 import os
-import re
-import json
 import logging
 import uuid
-from datetime import datetime
-from contextlib import asynccontextmanager
+import httpx
 
 import qdrant_client
-from qdrant_client.http import models
 
 # OpenAI Agents SDK imports
 from agents import (
@@ -28,26 +23,9 @@ from agents import (
     input_guardrail,
     output_guardrail,
 )
-from pydantic import BaseModel
 
-# Import database components with fallback
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
-# Try PostgreSQL first, fall back to in-memory if connection fails
-try:
-    NEON_DB_URL = os.getenv("NEON_DATABASE_URL")
-    if NEON_DB_URL and "NEON_DB_PASSWORD" not in NEON_DB_URL:
-        from db import save_message, get_session_history, create_session, Message as MessageModel
-        print("Using PostgreSQL database for message persistence")
-    else:
-        from db_simple import save_message, get_session_history, create_session, Message as MessageModel
-        print("Using in-memory database (Neon DB not properly configured)")
-except Exception as e:
-    # If there's any error connecting to PostgreSQL, fall back to in-memory
-    from db_simple import save_message, get_session_history, create_session, Message as MessageModel
-    print(f"Using in-memory database (PostgreSQL connection failed: {str(e)})")
+# Import in-memory database
+from db_simple import save_message, get_session_history, create_session
 
 # Load environment variables
 load_dotenv()
@@ -249,25 +227,29 @@ class RAGService:
             logger.error("Service not initialized")
             return []
 
-        # Generate embedding for the query using external client
-        external_client = AsyncOpenAI(
-            api_key=os.getenv("GEMINI_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/"),
-        )
+        # Generate embedding for the query using Gemini native API
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent",
+                headers={"Content-Type": "application/json"},
+                json={
+                    "content": {
+                        "parts": [{"text": query}]
+                    }
+                },
+                params={"key": os.getenv("GEMINI_KEY")}
+            )
+            response.raise_for_status()
+            result = response.json()
+            query_embedding = result["embedding"]["values"]
 
-        embedding_response = await external_client.embeddings.create(
-            input=query,
-            model=os.getenv("EMBEDDING_MODEL", "text-embedding-004")
-        )
-        query_embedding = embedding_response.data[0].embedding
-
-        # Search in Qdrant
-        search_results = self.qdrant_client.search(
+        # Search in Qdrant using query_points (new API)
+        search_results = self.qdrant_client.query_points(
             collection_name=self.collection_name,
-            query_vector=query_embedding,
+            query=query_embedding,
             limit=top_k,
             with_payload=True
-        )
+        ).points
 
         retrieved_chunks = []
         for result in search_results:

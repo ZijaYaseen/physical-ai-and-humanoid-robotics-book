@@ -42,6 +42,14 @@ const config = {
     locales: ['en'],
   },
 
+  // Inject backend URL configuration for chatbot
+  scripts: [
+    {
+      src: '/physical-ai-and-humanoid-robotics-book/chatbot-config.js',
+      async: true,
+    },
+  ],
+
 presets: [
     [
       'classic',

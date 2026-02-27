@@ -11,6 +11,7 @@ import os
 import hashlib
 import logging
 import uuid
+import httpx
 from pathlib import Path
 from typing import List, Dict, Any
 from dataclasses import dataclass
@@ -19,7 +20,6 @@ import asyncio
 import qdrant_client
 from qdrant_client.http import models
 from dotenv import load_dotenv
-from agents import AsyncOpenAI
 
 # Load environment variables
 load_dotenv()
@@ -50,11 +50,9 @@ class DocumentIngestor:
             api_key=os.getenv("QDRANT_API_KEY")
         )
 
-        # Initialize OpenAI client (using Gemini via OpenAI-compatible endpoint)
-        self.external_client = AsyncOpenAI(
-            base_url=os.getenv("OPENAI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"),
-            api_key=os.getenv("GEMINI_KEY")
-        )
+        # Store Gemini API key for direct API calls
+        self.gemini_key = os.getenv("GEMINI_KEY")
+        self.gemini_api_base = os.getenv("OPENAI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai")
 
         # Collection name for document chunks
         self.collection_name = "book_chunks"
@@ -74,7 +72,7 @@ class DocumentIngestor:
                 logger.info(f"Creating collection {self.collection_name}")
                 self.qdrant_client.create_collection(
                     collection_name=self.collection_name,
-                    vectors_config=models.VectorParams(size=768, distance=models.Distance.COSINE)  # text-embedding-004
+                    vectors_config=models.VectorParams(size=3072, distance=models.Distance.COSINE)  # gemini-embedding-001
                 )
                 logger.info(f"Collection {self.collection_name} created successfully")
             except Exception as create_error:
@@ -127,12 +125,21 @@ class DocumentIngestor:
         return chunks
 
     async def _generate_embedding(self, text: str) -> List[float]:
-        """Generate embedding for text using OpenAI-compatible endpoint."""
-        response = await self.external_client.embeddings.create(
-            input=text,
-            model=os.getenv("EMBEDDING_MODEL", "text-embedding-004")
-        )
-        return response.data[0].embedding
+        """Generate embedding for text using Gemini native embedding API."""
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent",
+                headers={"Content-Type": "application/json"},
+                json={
+                    "content": {
+                        "parts": [{"text": text}]
+                    }
+                },
+                params={"key": self.gemini_key}
+            )
+            response.raise_for_status()
+            result = response.json()
+            return result["embedding"]["values"]
 
     def _get_existing_chunk_ids(self) -> set:
         """Get set of existing chunk IDs from Qdrant to avoid duplicates."""

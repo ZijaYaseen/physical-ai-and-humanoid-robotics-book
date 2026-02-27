@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
 
 interface Message {
   id: string;
@@ -9,7 +8,6 @@ interface Message {
 }
 
 const RAGChatbot: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -70,14 +68,7 @@ const RAGChatbot: React.FC = () => {
 
     const { experienceLevel, familiarTools } = context;
 
-    let welcome = "Hello ";
-    if (user?.name) {
-      welcome += `${user.name}! `;
-    } else {
-      welcome += "! ";
-    }
-
-    welcome += "I'm your AI assistant for Physical AI and Humanoid Robotics. ";
+    let welcome = "Hello! I'm your AI assistant for Physical AI and Humanoid Robotics. ";
 
     if (experienceLevel) {
       switch (experienceLevel) {
@@ -184,10 +175,6 @@ const RAGChatbot: React.FC = () => {
                 {userContext.experienceLevel} • {userContext.osPreference}
               </span>
             )}
-            <div className="flex items-center">
-              <div className={`w-3 h-3 rounded-full mr-1 ${isAuthenticated ? 'bg-green-400' : 'bg-gray-400'}`}></div>
-              <span className="text-xs">{isAuthenticated ? 'Authenticated' : 'Guest'}</span>
-            </div>
           </div>
         </div>
       </div>

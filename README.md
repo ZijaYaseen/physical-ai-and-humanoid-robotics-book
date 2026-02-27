@@ -16,20 +16,9 @@ This comprehensive course book covers robotics, AI, and physical interaction con
 - Code examples and notebooks
 - Step-by-step tutorials
 - Weekly schedule and setup guides
-- User authentication and personalization
 - RAG-powered AI assistant for personalized learning
 
-## Better Auth Integration
-
-The platform now includes user authentication with Better Auth, featuring:
-
-- Email and password authentication
-- OAuth providers (Google and GitHub)
-- User profile management with background information (programming experience, OS preference, tools familiarity, device type)
-- Personalized learning experience based on user background
-- Privacy controls and data management
-
-### Getting Started
+## Getting Started
 
 1. Install dependencies:
    ```bash
@@ -37,39 +26,29 @@ The platform now includes user authentication with Better Auth, featuring:
    ```
 
 2. Set up environment variables (copy `.env.example` to `.env` and fill in your values)
-3. Start the development server:
+
+3. Start the frontend:
    ```bash
-   npm run dev  # Runs both frontend and backend
+   npm run start
    ```
 
-### Environment Variables
+4. Build and run the backend with Docker:
+   ```bash
+   docker-compose up --build
+   ```
+
+## Environment Variables
 
 Copy `.env.example` to `.env` and fill in your values:
 
 ```env
-# Better Auth Configuration
-BETTER_AUTH_SECRET=your-secret-key-here
-BETTER_AUTH_URL=http://localhost:3000
-
-# Neon Database Configuration
-NEON_DATABASE_URL=your-neon-database-url-here
-
-# OAuth Provider Configuration - Google
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-
-# OAuth Provider Configuration - GitHub
-GITHUB_CLIENT_ID=your-github-client-id
-GITHUB_CLIENT_SECRET=your-github-client-secret
-
-# Session Configuration
-SESSION_EXPIRES_IN_DAYS=30
-
-# RAG Configuration (existing)
+# RAG Configuration
 GEMINI_KEY=your-gemini-api-key
 OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
 QDRANT_URL=your-qdrant-url
 QDRANT_API_KEY=your-qdrant-api-key
+CHAT_MODEL=gemini-2.5-flash
+EMBEDDING_MODEL=text-embedding-004
 ```
 
 ## Local Development
@@ -79,15 +58,17 @@ QDRANT_API_KEY=your-qdrant-api-key
    npm install
    ```
 
-2. Start the development server:
+2. Start the frontend:
    ```bash
-   npm run dev  # Starts both frontend and backend
-   # or separately:
-   # npm run start:frontend
-   # npm run start:backend
+   npm run start
    ```
 
-3. Build for production:
+3. Build and run the backend with Docker Desktop:
+   ```bash
+   docker-compose up --build
+   ```
+
+4. Build for production:
    ```bash
    npm run build
    ```

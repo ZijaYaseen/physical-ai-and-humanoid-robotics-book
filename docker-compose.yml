@@ -1,22 +1,14 @@
-version: '3.8'
-
 services:
   backend:
-    build: .
+    build: ./backend_python
     ports:
       - "8000:8000"
-    environment:
-      - GEMINI_KEY=${GEMINI_KEY}
-      - QDRANT_URL=${QDRANT_URL}
-      - QDRANT_API_KEY=${QDRANT_API_KEY}
-      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
-      - CHAT_MODEL=${CHAT_MODEL}
-      - EMBEDDING_MODEL=${EMBEDDING_MODEL}
-      - NEON_DATABASE_URL=${NEON_DATABASE_URL}
     env_file:
       - .env
     volumes:
+      - ./backend_python:/app
       - ./logs:/app/logs
+      - ./docs:/app/docs
     restart: unless-stopped
     networks:
       - app-network
